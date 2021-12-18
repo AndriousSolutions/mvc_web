@@ -30,3 +30,8 @@ export 'package:mvc_web/src/structure/scaffold_screens.dart';
 
 /// understructure
 export 'package:mvc_web/src/understructure/basic_widgets.dart';
+
+/// utilities
+export 'package:mvc_web/src/utils/hyperlink.dart';
+export 'package:mvc_web/src/utils/iframe_widget.dart';
+export 'package:mvc_web/src/utils/web_utils.dart';

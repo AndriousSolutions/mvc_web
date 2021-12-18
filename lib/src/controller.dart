@@ -6,3 +6,6 @@
 // hide runApp as it's not compatible with Flutter Web
 // Error: Unsupported operation: dart:isolate is not supported on dart4web
 export 'package:mvc_application/controller.dart' hide AppController;
+
+/// utilities
+export 'package:mvc_web/src/utils/web_utils.dart';
