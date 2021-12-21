@@ -10,20 +10,11 @@ class ScaffoldScreenWidget extends BasicScrollStatefulWidget {
       {Key? key, this.title})
       : super(controller, key: key);
   final String? title;
-
-  PreferredSizeWidget? appBar(BuildContext context) => AppBar(
-        title: Text(title ?? ''),
-        // actions: <Widget>[
-        //   IconButton(
-        //     icon: const Icon(Icons.share),
-        //     onPressed: () {},
-        //   )
-        // ],
-      );
 }
 
 abstract class ScaffoldScreenController extends BasicScrollController {
   ScaffoldScreenController({
+    this.appBar,
     this.backgroundColor,
     this.resizeToAvoidBottomInset,
     this.primary,
@@ -46,8 +37,10 @@ abstract class ScaffoldScreenController extends BasicScrollController {
 
   ScaffoldScreenWidget? _widget;
 
-  /// Provide a appBar
-  PreferredSizeWidget? appBar(BuildContext context) => null;
+  /// Provide a appBar using this function instead.
+  PreferredSizeWidget? onAppBar() => _widget == null || _widget?.title == null
+      ? null
+      : AppBar(title: Text(_widget?.title ?? ''));
 
   /// Provide the body of the Scaffold widget
   Widget? body(BuildContext context);
@@ -66,31 +59,33 @@ abstract class ScaffoldScreenController extends BasicScrollController {
 
   Widget? bottomSheet(BuildContext context);
 
-  Color? backgroundColor;
+  final PreferredSizeWidget? appBar;
 
-  bool? resizeToAvoidBottomInset;
+  final Color? backgroundColor;
 
-  bool? primary;
+  final bool? resizeToAvoidBottomInset;
 
-  DragStartBehavior? drawerDragStartBehavior;
+  final bool? primary;
 
-  bool? extendBody;
+  final DragStartBehavior? drawerDragStartBehavior;
 
-  bool? extendBodyBehindAppBar;
+  final bool? extendBody;
 
-  Color? drawerScrimColor;
+  final bool? extendBodyBehindAppBar;
 
-  double? drawerEdgeDragWidth;
+  final Color? drawerScrimColor;
 
-  bool? drawerEnableOpenDragGesture;
+  final double? drawerEdgeDragWidth;
 
-  bool? endDrawerEnableOpenDragGesture;
+  final bool? drawerEnableOpenDragGesture;
 
-  String? restorationId;
+  final bool? endDrawerEnableOpenDragGesture;
+
+  final String? restorationId;
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: appBar(context) ?? _widget!.appBar(context)
+        appBar: appBar ?? onAppBar()
         // ??
         // PreferredSize(
         //   preferredSize: Size(screenSize.width, 1000),

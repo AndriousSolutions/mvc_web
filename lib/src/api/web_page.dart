@@ -2,52 +2,52 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-/// nonVirtual - warn against overriding.
-
 import 'package:mvc_web/src/view.dart';
 
-class WebPage extends WebPageBase {
-  WebPage(
-    this.webPageController, {
+class WebPageWidget extends WebPageBase {
+  WebPageWidget({
     Key? key,
-    String? title = '',
+    required this.controller,
+    String? title,
     this.coverImage,
     this.coverBanner,
     this.hasAccessBar,
     this.hasBottomBar,
-  }) : super(webPageController, key: key, title: title);
-  final WebPageController webPageController;
+  }) : super(controller, key: key, title: title);
+  final WebPageController controller;
   final String? coverImage;
   final bool? coverBanner;
   final bool? hasAccessBar;
   final bool? hasBottomBar;
 
   /// Main Content
-  List<Widget> withBottomBar05(BuildContext context, [WebPage? widget]) =>
-      webPageController.withBottomBar05(context, widget ?? this);
+  List<Widget> withBottomBar05(BuildContext context, [WebPageWidget? widget]) =>
+      controller.withBottomBar05(context, widget ?? this);
 
   /// Main content
-  List<Widget>? withHeader04(BuildContext context, [WebPage? widget]) =>
-      webPageController.withHeader04(context, widget ?? this);
+  List<Widget>? withHeader04(BuildContext context, [WebPageWidget? widget]) =>
+      controller.withHeader04(context, widget ?? this);
 
   /// Website's header
-  List<Widget>? withBanner03(BuildContext context, [WebPage? widget]) =>
-      webPageController.withBanner03(context, widget ?? this);
+  List<Widget>? withBanner03(BuildContext context, [WebPageWidget? widget]) =>
+      controller.withBanner03(context, widget ?? this);
 
-  List<Widget>? withHeaderBar02(BuildContext context, [WebPage? widget]) =>
-      webPageController.withHeaderBar02(context, widget ?? this);
+  List<Widget>? withHeaderBar02(BuildContext context,
+          [WebPageWidget? widget]) =>
+      controller.withHeaderBar02(context, widget ?? this);
 
-  List<Widget>? header01(BuildContext context, [WebPage? widget]) =>
-      webPageController.header01(context, widget ?? this);
+  List<Widget>? header01(BuildContext context, [WebPageWidget? widget]) =>
+      controller.header01(context, widget ?? this);
 
-  List<Widget>? accessBar(BuildContext context, [WebPage? widget]) =>
-      webPageController.accessBar(context, widget ?? this);
+  List<Widget>? accessBar(BuildContext context, [WebPageWidget? widget]) =>
+      controller.accessBar(context, widget ?? this);
 }
 
 /// Controller
 class WebPageController extends WebPageBaseController {
   //
   WebPageController({
+    PreferredSizeWidget? appBar,
     Color? backgroundColor,
     bool? resizeToAvoidBottomInset,
     bool? primary,
@@ -61,6 +61,7 @@ class WebPageController extends WebPageBaseController {
     String? restorationId,
     ScrollPhysics? physics,
   }) : super(
+          appBar: appBar,
           backgroundColor: backgroundColor,
           resizeToAvoidBottomInset: resizeToAvoidBottomInset,
           primary: primary,
@@ -79,13 +80,13 @@ class WebPageController extends WebPageBaseController {
   void initState() {
     super.initState();
     // This function gets called repeatedly. StatefulWidget gets rebuilt?
-    _widget = widget as WebPage;
+    _widget = widget as WebPageWidget;
   }
 
-  WebPage? _widget;
+  WebPageWidget? _widget;
 
   /// Supply the widget through the widget tree.
-  T? webPageOf<T extends WebPage>(BuildContext context) =>
+  T? webPageOf<T extends WebPageWidget>(BuildContext context) =>
       BasicScrollController.of<T>(context);
 
   /// Possible Screen overlay
@@ -93,7 +94,7 @@ class WebPageController extends WebPageBaseController {
   StackWidgetProperties? screenOverlay(BuildContext context) => null;
 
   @override
-  List<Widget>? child(BuildContext context, [WebPage? widget]) {
+  List<Widget>? child(BuildContext context, [WebPageWidget? widget]) {
     // Supply the 'parent' StatefulWidget.
     if (widget == null) {
       widget ??= _widget;
@@ -143,7 +144,7 @@ class WebPageController extends WebPageBaseController {
   }
 
   /// Main Content
-  List<Widget> withBottomBar05(BuildContext context, [WebPage? widget]) {
+  List<Widget> withBottomBar05(BuildContext context, [WebPageWidget? widget]) {
     // Supply the 'parent' StatefulWidget.
     widget ??= _widget;
 
@@ -192,10 +193,11 @@ class WebPageController extends WebPageBaseController {
   }
 
   /// Main content
-  List<Widget>? withHeader04(BuildContext context, [WebPage? widget]) => null;
+  List<Widget>? withHeader04(BuildContext context, [WebPageWidget? widget]) =>
+      null;
 
   /// Website's header
-  List<Widget>? withBanner03(BuildContext context, [WebPage? widget]) {
+  List<Widget>? withBanner03(BuildContext context, [WebPageWidget? widget]) {
     // Supply the 'parent' StatefulWidget.
     widget ??= _widget;
 
@@ -235,7 +237,7 @@ class WebPageController extends WebPageBaseController {
     return widgets;
   }
 
-  List<Widget>? withHeaderBar02(BuildContext context, [WebPage? widget]) {
+  List<Widget>? withHeaderBar02(BuildContext context, [WebPageWidget? widget]) {
     // Supply the 'parent' StatefulWidget.
     widget ??= _widget;
 
@@ -263,9 +265,10 @@ class WebPageController extends WebPageBaseController {
     return widgets;
   }
 
-  List<Widget>? header01(BuildContext context, [WebPage? widget]) => null;
+  List<Widget>? header01(BuildContext context, [WebPageWidget? widget]) => null;
 
-  List<Widget>? accessBar(BuildContext context, [WebPage? widget]) => null;
+  List<Widget>? accessBar(BuildContext context, [WebPageWidget? widget]) =>
+      null;
 }
 
 class WebPageContainer extends StatelessWidget {
@@ -293,12 +296,13 @@ class WebPageContainer extends StatelessWidget {
   Widget? builder(BuildContext context) => null;
 }
 
-class WebPageWrapper extends WebPage {
+class WebPageWrapper extends WebPageWidget {
   WebPageWrapper({
     Key? key,
     Widget? child,
     this.children,
-    String title = '',
+    String? title,
+    PreferredSizeWidget? appBar,
     WebPageController? controller,
     String? coverImage,
     bool coverBanner = true,
@@ -325,7 +329,7 @@ class WebPageWrapper extends WebPage {
     ScrollPhysics? physics,
   })  : assert(child != null || (children != null && children.isNotEmpty)),
         super(
-          controller ??
+          controller: controller ??
               WebPageControllerWrapper(
                 persistentFooterButtons: persistentFooterButtons,
                 drawer: drawer,
@@ -334,6 +338,7 @@ class WebPageWrapper extends WebPage {
                 onEndDrawerChanged: onEndDrawerChanged,
                 bottomNavigationBar: bottomNavigationBar,
                 bottomSheet: bottomSheet,
+                appBar: appBar,
                 backgroundColor: backgroundColor,
                 resizeToAvoidBottomInset: resizeToAvoidBottomInset,
                 primary: primary,
@@ -363,11 +368,11 @@ class WebPageWrapper extends WebPage {
   final List<Widget>? children;
 
   @override
-  List<Widget>? withHeader04(BuildContext context, [WebPage? widget]) =>
+  List<Widget>? withHeader04(BuildContext context, [WebPageWidget? widget]) =>
       children;
 
   @override
-  List<Widget> child(context, [WebPage? widget]) =>
+  List<Widget> child(context, [WebPageWidget? widget]) =>
       _child.isNotEmpty ? _child : super.child(context)!;
 }
 
@@ -380,6 +385,7 @@ class WebPageControllerWrapper extends WebPageController {
     DrawerCallback? Function(BuildContext context)? onEndDrawerChanged,
     Widget? Function(BuildContext context)? bottomNavigationBar,
     Widget? Function(BuildContext context)? bottomSheet,
+    PreferredSizeWidget? appBar,
     Color? backgroundColor,
     bool? resizeToAvoidBottomInset,
     bool? primary,
@@ -393,6 +399,7 @@ class WebPageControllerWrapper extends WebPageController {
     String? restorationId,
     ScrollPhysics? physics,
   }) : super(
+          appBar: appBar,
           backgroundColor: backgroundColor,
           resizeToAvoidBottomInset: resizeToAvoidBottomInset,
           primary: primary,
@@ -426,12 +433,12 @@ class WebPageControllerWrapper extends WebPageController {
 
   /// Supply the widget's function instead.
   @override
-  List<Widget>? withHeader04(BuildContext context, [WebPage? widget]) =>
+  List<Widget>? withHeader04(BuildContext context, [WebPageWidget? widget]) =>
       _wrapper!.children;
 
   /// Supply the widget's function instead.
   @override
-  List<Widget>? child(BuildContext context, [WebPage? widget]) =>
+  List<Widget>? child(BuildContext context, [WebPageWidget? widget]) =>
       _wrapper!._child.isNotEmpty ? _wrapper!._child : super.child(context)!;
 
   List<Widget>? Function(BuildContext context)? _persistentFooterButtons;
@@ -475,13 +482,14 @@ class WebPageControllerWrapper extends WebPageController {
 
 /// Popup window
 /// Provides an animated popup.
-class PopupPage extends WebPage {
+class PopupPage extends WebPageWidget {
   PopupPage({
     Key? key,
     required this.builder,
     this.initState,
     this.dispose,
     String? title,
+    PreferredSizeWidget? appBar,
     String? coverImage,
     bool? coverBanner,
     bool? hasAccessBar,
@@ -499,11 +507,12 @@ class PopupPage extends WebPage {
     String? restorationId,
     ScrollPhysics? physics,
   }) : super(
-          BuilderPageController(
+          controller: BuilderPageController(
             builder: builder,
             initStateFunc: initState,
             disposeFunc: dispose,
             hasBottomBar: hasBottomBar ?? false,
+            appBar: appBar,
             backgroundColor: backgroundColor,
             resizeToAvoidBottomInset: resizeToAvoidBottomInset,
             primary: primary,
@@ -532,7 +541,7 @@ class PopupPage extends WebPage {
   String get title => '';
 
   @override
-  List<Widget>? child(BuildContext context, [WebPage? widget]) =>
+  List<Widget>? child(BuildContext context, [WebPageWidget? widget]) =>
       [builder(context)];
 
   /// Create a popup window
@@ -540,6 +549,7 @@ class PopupPage extends WebPage {
     BuildContext parentContext,
     WidgetBuilder child, {
     String? title,
+    PreferredSizeWidget? appBar,
     String? coverImage,
     bool? coverBanner,
     bool? accessBar,
@@ -567,6 +577,7 @@ class PopupPage extends WebPage {
           initState: initState,
           dispose: dispose,
           title: title,
+          appBar: appBar,
           coverImage: coverImage,
           coverBanner: coverBanner,
           hasAccessBar: accessBar,
@@ -621,6 +632,7 @@ class BuilderPageController extends WebPageController {
     this.initStateFunc,
     this.disposeFunc,
     bool? hasBottomBar,
+    PreferredSizeWidget? appBar,
     Color? backgroundColor,
     bool? resizeToAvoidBottomInset,
     bool? primary,
@@ -635,6 +647,7 @@ class BuilderPageController extends WebPageController {
     ScrollPhysics? physics,
   })  : _hasBottomBar = hasBottomBar ?? true,
         super(
+          appBar: appBar,
           backgroundColor: backgroundColor,
           resizeToAvoidBottomInset: resizeToAvoidBottomInset,
           primary: primary,
@@ -670,11 +683,11 @@ class BuilderPageController extends WebPageController {
   }
 
   @override
-  List<Widget>? withHeader04(BuildContext context, [WebPage? widget]) =>
+  List<Widget>? withHeader04(BuildContext context, [WebPageWidget? widget]) =>
       _hasBottomBar ? [builder(context)] : null;
 
   @override
-  List<Widget> withBottomBar05(BuildContext context, [WebPage? widget]) =>
+  List<Widget> withBottomBar05(BuildContext context, [WebPageWidget? widget]) =>
       !_hasBottomBar ? [builder(context)] : super.withBottomBar05(context);
 }
 
@@ -690,7 +703,7 @@ Widget interactiveViewer(Widget widget, {bool wrap = true}) {
     );
   }
 
-  if (wrap && widget is! WebPage) {
+  if (wrap && widget is! WebPageWidget) {
     widget = WebPageWrapper(child: widget);
   }
 

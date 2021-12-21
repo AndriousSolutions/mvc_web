@@ -14,7 +14,7 @@ abstract class WebPageBase extends ScaffoldScreenWidget
   final WebPageBaseController webPageBaseController;
 
   /// The 'child' widget containing the core of the screen's content.
-  List<Widget>? child(BuildContext context, [WebPage? widget]) =>
+  List<Widget>? child(BuildContext context, [WebPageWidget? widget]) =>
       webPageBaseController.child(context, widget);
 
   /// Possible Screen overlay
@@ -22,7 +22,7 @@ abstract class WebPageBase extends ScaffoldScreenWidget
       webPageBaseController.screenOverlay(context);
 
   /// Possible bottom bar
-  Column? bottomBar(BuildContext context, [WebPage? widget]) =>
+  Column? bottomBar(BuildContext context, [WebPageWidget? widget]) =>
       webPageBaseController.bottomBar(context, widget);
 
   /// Supply a 'popup' screen that zooms in on the screen.
@@ -58,6 +58,7 @@ abstract class WebPageBase extends ScaffoldScreenWidget
 
 abstract class WebPageBaseController extends ScaffoldScreenController {
   WebPageBaseController({
+    PreferredSizeWidget? appBar,
     Color? backgroundColor,
     bool? resizeToAvoidBottomInset,
     bool? primary,
@@ -77,6 +78,7 @@ abstract class WebPageBaseController extends ScaffoldScreenController {
     this.clipBehavior,
     this.keyboardDismissBehavior,
   }) : super(
+          appBar: appBar,
           backgroundColor: backgroundColor,
           resizeToAvoidBottomInset: resizeToAvoidBottomInset,
           primary: primary,
@@ -111,14 +113,14 @@ abstract class WebPageBaseController extends ScaffoldScreenController {
 
   //
   /// The 'child' widget containing the core of the screen's content.
-  List<Widget>? child(BuildContext context, [WebPage? widget]);
+  List<Widget>? child(BuildContext context, [WebPageWidget? widget]);
 
   /// Possible Screen overlay
   StackWidgetProperties? screenOverlay(BuildContext context);
 
-  /// Provide a appBar
+  /// Provide a appBar here as well.
   @override
-  PreferredSizeWidget? appBar(BuildContext context) => null;
+  PreferredSizeWidget? onAppBar() => null;
 
   @override
   List<Widget>? persistentFooterButtons(BuildContext context) => null;
@@ -142,7 +144,7 @@ abstract class WebPageBaseController extends ScaffoldScreenController {
   Widget? bottomSheet(BuildContext context) => null;
 
   /// A bottom bar for every web page.
-  Column? bottomBar(BuildContext context, [WebPage? widget]) => null;
+  Column? bottomBar(BuildContext context, [WebPageWidget? widget]) => null;
 
   /// This is the 'default' bottom bar if any.
   BottomBar? get appBottomBar => _appBottomBar;
@@ -242,12 +244,14 @@ abstract class WebPageBaseController extends ScaffoldScreenController {
   /// The widget passed to the SingleChildScrollView in the parent class.
   Widget? scrollChild(BuildContext context) {
     //
-    WebPage? webPage = widget is WebPage ? widget as WebPage : null;
+    WebPageWidget? webPage =
+        widget is WebPageWidget ? widget as WebPageWidget : null;
 
     List<Widget>? list = child(context, webPage) ?? [];
 
     // Supply a bottom bar or not?
-    if (webPage != null && (webPage.hasBottomBar == null || webPage.hasBottomBar == true)) {
+    if (webPage != null &&
+        (webPage.hasBottomBar == null || webPage.hasBottomBar == true)) {
       //
       list.add(SizedBox(height: screenSize.height / 10));
 
