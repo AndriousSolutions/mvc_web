@@ -1,4 +1,13 @@
 
+## 1.3.0
+ December 28, 2021
+- final state = StateSet.to<_BasicScrollState>();
+- child: const BackButton(),
+- WebPageWidget? get widget {
+- PreferredSizeWidget? onAppBar() => super.onAppBar();
+- Widget builder(BuildContext context) {
+- List<Widget> buildList(BuildContext context) {
+
 ## 1.2.0
  December 21, 2021
 - Example app

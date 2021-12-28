@@ -13,9 +13,53 @@ abstract class WebPageBase extends ScaffoldScreenWidget
 
   final WebPageBaseController webPageBaseController;
 
-  /// The 'child' widget containing the core of the screen's content.
-  List<Widget>? child(BuildContext context, [WebPageWidget? widget]) =>
-      webPageBaseController.child(context, widget);
+  /// Create the webpage using this widget if necessary.
+  Widget builder(BuildContext context) {
+    Widget widget;
+    try {
+      /// Retrieve the main content if any.
+      widget = webPageBaseController.builder(context) ?? const SizedBox();
+    } catch (ex, stack) {
+      widget = const SizedBox();
+      FlutterError.reportError(FlutterErrorDetails(
+        exception: ex,
+        stack: stack,
+        library: 'webpage_base.dart',
+        context: ErrorDescription('Widget? builder(BuildContext context) {'),
+      ));
+      // Make the error known if under development.
+      if (App.inDebugger) {
+        rethrow;
+      }
+    }
+    return widget;
+  }
+
+  /// Create a list of Widgets for a  webpage using this widget if necessary.
+  List<Widget> buildList(BuildContext context) {
+    List<Widget> list;
+    try {
+      /// Retrieve the main content if any.
+      list = webPageBaseController.buildList(context) ?? [const SizedBox()];
+    } catch (ex, stack) {
+      list = [const SizedBox()];
+      FlutterError.reportError(FlutterErrorDetails(
+        exception: ex,
+        stack: stack,
+        library: 'webpage_base.dart',
+        context: ErrorDescription('Widget? builder(BuildContext context) {'),
+      ));
+      // Make the error known if under development.
+      if (App.inDebugger) {
+        rethrow;
+      }
+    }
+    return list;
+  }
+
+  // /// The 'child' widget containing the core of the screen's content.
+  // List<Widget>? child(BuildContext context, [WebPageWidget? widget]) =>
+  //     webPageBaseController.child(context, widget);
 
   /// Possible Screen overlay
   StackWidgetProperties? screenOverlay(BuildContext context) =>
@@ -23,7 +67,7 @@ abstract class WebPageBase extends ScaffoldScreenWidget
 
   /// Possible bottom bar
   Column? bottomBar(BuildContext context, [WebPageWidget? widget]) =>
-      webPageBaseController.bottomBar(context, widget);
+      webPageBaseController.onBottomBar(context, widget);
 
   /// Supply a 'popup' screen that zooms in on the screen.
   Widget popupScreen(
@@ -77,6 +121,7 @@ abstract class WebPageBaseController extends ScaffoldScreenController {
     this.dragStartBehavior,
     this.clipBehavior,
     this.keyboardDismissBehavior,
+    State? state,
   }) : super(
           appBar: appBar,
           backgroundColor: backgroundColor,
@@ -90,6 +135,7 @@ abstract class WebPageBaseController extends ScaffoldScreenController {
           drawerEnableOpenDragGesture: drawerEnableOpenDragGesture,
           endDrawerEnableOpenDragGesture: endDrawerEnableOpenDragGesture,
           restorationId: restorationId,
+          state: state,
         );
 
   /// The axis along which the scroll view scrolls.
@@ -111,16 +157,31 @@ abstract class WebPageBaseController extends ScaffoldScreenController {
 
   final ScrollViewKeyboardDismissBehavior? keyboardDismissBehavior;
 
-  //
-  /// The 'child' widget containing the core of the screen's content.
-  List<Widget>? child(BuildContext context, [WebPageWidget? widget]);
+  /// Create your webpage or web screen
+  /// or return null and implement the buildList() function instead.
+  Widget? builder(BuildContext context);
 
-  /// Possible Screen overlay
-  StackWidgetProperties? screenOverlay(BuildContext context);
+  /// Create your webpage or web screen
+  List<Widget>? buildList(BuildContext context) => null;
 
   /// Provide a appBar here as well.
+  /// Otherwise a default AppBar is implemented.
   @override
-  PreferredSizeWidget? onAppBar() => null;
+  PreferredSizeWidget? onAppBar() => super.onAppBar();
+
+  /// A bottom bar for every web page.
+  // List<Widget>
+  Column? onBottomBar(BuildContext context, [WebPageWidget? widget]) => null;
+
+  /// This is the 'default' bottom bar if any.
+  BottomBar? get appBottomBar => _appBottomBar;
+  static BottomBar? _appBottomBar;
+
+  // /// The 'child' widget containing the core of the screen's content.
+  // List<Widget>? child(BuildContext context, [WebPageWidget? widget]);
+
+  /// Possible Screen overlay
+  StackWidgetProperties? screenOverlay(BuildContext context) => null;
 
   @override
   List<Widget>? persistentFooterButtons(BuildContext context) => null;
@@ -143,13 +204,6 @@ abstract class WebPageBaseController extends ScaffoldScreenController {
   @override
   Widget? bottomSheet(BuildContext context) => null;
 
-  /// A bottom bar for every web page.
-  Column? bottomBar(BuildContext context, [WebPageWidget? widget]) => null;
-
-  /// This is the 'default' bottom bar if any.
-  BottomBar? get appBottomBar => _appBottomBar;
-  static BottomBar? _appBottomBar;
-
   /// Provide the body of the webpage
   @override
   Widget body(BuildContext context) {
@@ -167,7 +221,7 @@ abstract class WebPageBaseController extends ScaffoldScreenController {
         exception: ex,
         stack: stack,
         library: 'webpage_base.dart',
-        context: ErrorDescription('_child = child(context)'),
+        context: ErrorDescription('_child = scrollChild(context)'),
       ));
       // Make the error known if under development.
       if (App.inDebugger) {
@@ -247,17 +301,33 @@ abstract class WebPageBaseController extends ScaffoldScreenController {
     WebPageWidget? webPage =
         widget is WebPageWidget ? widget as WebPageWidget : null;
 
-    List<Widget>? list = child(context, webPage) ?? [];
+    List<Widget>? list = [];
+
+    // Retrieve the first and foremost webpage
+    final Widget? _widget = builder(context);
+
+    if (_widget != null) {
+      list.add(_widget);
+    }
+
+    // Retrieve a list of widgets that make up a webpage
+    final List<Widget>? _list = buildList(context);
+
+    if (_list != null && _list.isNotEmpty) {
+      list.addAll(_list);
+    }
+
+    if (list.isEmpty) {
+      list.add(const SizedBox());
+    }
 
     // Supply a bottom bar or not?
     if (webPage != null &&
         (webPage.hasBottomBar == null || webPage.hasBottomBar == true)) {
       //
-      list.add(SizedBox(height: screenSize.height / 10));
-
       Column? bottomColumn = webPage.bottomBar(context, webPage);
 
-      bottomColumn ??= bottomBar(context, webPage);
+      bottomColumn ??= onBottomBar(context, webPage);
 
       BottomBar? _bottomBar;
       // Was a bottom bar column generated?
@@ -267,12 +337,15 @@ abstract class WebPageBaseController extends ScaffoldScreenController {
 
         // Save the bottom bar for future use.
         _appBottomBar ??= _bottomBar;
+        //
       } else if (_appBottomBar != null) {
         //
         _bottomBar = _appBottomBar!;
       }
 
       if (_bottomBar != null) {
+        //
+        list.add(SizedBox(height: screenSize.height / 10));
         list.add(_bottomBar);
       }
     }
@@ -293,10 +366,7 @@ abstract class WebPageBaseController extends ScaffoldScreenController {
     CrossAxisAlignment? crossAxisAlignment,
     TextStyle? titleStyle,
     TextStyle? textStyle,
-    String? coverImage,
-    bool? coverBanner,
-    bool? accessBar,
-    bool? bottomBar,
+    bool? hasBottomBar,
   }) {
     final _screenSize = App.screenSize;
     final _smallScreen = App.inSmallScreen;
@@ -350,10 +420,7 @@ abstract class WebPageBaseController extends ScaffoldScreenController {
               (_) => Center(
                 child: popImage,
               ),
-              coverImage: coverImage,
-              coverBanner: coverBanner,
-              accessBar: accessBar,
-              bottomBar: bottomBar,
+              hasBottomBar: hasBottomBar,
             ),
             child: image ??
                 Padding(
@@ -462,4 +529,204 @@ class StackWidgetProperties {
   final StackFit? fit;
   final Clip? clipBehavior;
   final Widget? child;
+}
+
+/// Popup window
+/// Provides an animated popup.
+class PopupPage extends WebPageWidget {
+  PopupPage({
+    Key? key,
+    required this.inBuilder,
+    this.initState,
+    this.dispose,
+    String? title,
+    PreferredSizeWidget? appBar,
+    bool? hasBottomBar,
+    Color? backgroundColor,
+    bool? resizeToAvoidBottomInset,
+    bool? primary,
+    DragStartBehavior? drawerDragStartBehavior,
+    bool? extendBody,
+    bool? extendBodyBehindAppBar,
+    Color? drawerScrimColor,
+    double? drawerEdgeDragWidth,
+    bool? drawerEnableOpenDragGesture,
+    bool? endDrawerEnableOpenDragGesture,
+    String? restorationId,
+    ScrollPhysics? physics,
+    State? state,
+  }) : super(
+          controller: BuilderPageController(
+            inBuilder: inBuilder,
+            initStateFunc: initState,
+            disposeFunc: dispose,
+            appBar: appBar,
+            backgroundColor: backgroundColor,
+            resizeToAvoidBottomInset: resizeToAvoidBottomInset,
+            primary: primary,
+            drawerDragStartBehavior: drawerDragStartBehavior,
+            extendBody: extendBody,
+            extendBodyBehindAppBar: extendBodyBehindAppBar,
+            drawerScrimColor: drawerScrimColor,
+            drawerEdgeDragWidth: drawerEdgeDragWidth,
+            drawerEnableOpenDragGesture: drawerEnableOpenDragGesture,
+            endDrawerEnableOpenDragGesture: endDrawerEnableOpenDragGesture,
+            restorationId: restorationId,
+            physics: physics,
+            state: state,
+            popup: true,
+          ),
+          key: key,
+          title: title,
+          hasBottomBar: hasBottomBar ?? false,
+        );
+  final WidgetBuilder inBuilder;
+  final void Function()? initState;
+  final void Function()? dispose;
+
+  @override
+  String get title => '';
+
+  // @override
+  // List<Widget>? child(BuildContext context, [WebPageWidget? widget]) =>
+  //     [builder(context)];
+
+  /// Create a popup window
+  static Future<T?> window<T>(
+    BuildContext parentContext,
+    WidgetBuilder child, {
+    String? title,
+    PreferredSizeWidget? appBar,
+    bool? hasBottomBar,
+    Color? backgroundColor,
+    bool? resizeToAvoidBottomInset,
+    bool? primary,
+    DragStartBehavior? drawerDragStartBehavior,
+    bool? extendBody,
+    bool? extendBodyBehindAppBar,
+    Color? drawerScrimColor,
+    double? drawerEdgeDragWidth,
+    bool? drawerEnableOpenDragGesture,
+    bool? endDrawerEnableOpenDragGesture,
+    String? restorationId,
+    ScrollPhysics? physics,
+    State? state,
+    Curve? curve,
+    void Function()? initState,
+    void Function()? dispose,
+  }) async {
+    final T? result = await Navigator.of(parentContext).push<T>(
+      PageRouteBuilder<T>(
+        pageBuilder: (context, animation, secondaryAnimation) => PopupPage(
+          inBuilder: (_) => child(parentContext),
+          initState: initState,
+          dispose: dispose,
+          title: title,
+          appBar: appBar,
+          hasBottomBar: hasBottomBar,
+          backgroundColor: backgroundColor,
+          resizeToAvoidBottomInset: resizeToAvoidBottomInset,
+          primary: primary,
+          drawerDragStartBehavior: drawerDragStartBehavior,
+          extendBody: extendBody,
+          extendBodyBehindAppBar: extendBodyBehindAppBar,
+          drawerScrimColor: drawerScrimColor,
+          drawerEdgeDragWidth: drawerEdgeDragWidth,
+          drawerEnableOpenDragGesture: drawerEnableOpenDragGesture,
+          endDrawerEnableOpenDragGesture: endDrawerEnableOpenDragGesture,
+          restorationId: restorationId,
+          physics: physics,
+          state: state,
+        ),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          final rectAnimation = _createTween(parentContext)
+              .chain(CurveTween(curve: curve ?? Curves.ease))
+              .animate(animation);
+          return Stack(
+            children: [
+              PositionedTransition(rect: rectAnimation, child: child),
+            ],
+          );
+        },
+      ),
+    );
+    return result;
+  }
+
+  /// Define the transition used in the animation
+  ///
+  //todo: If context is null?
+  static Tween<RelativeRect> _createTween(BuildContext context) {
+    final box = context.findRenderObject() as RenderBox;
+    final rect = box.localToGlobal(Offset.zero) & box.size;
+    final relativeRect =
+        RelativeRect.fromSize(rect, MediaQuery.of(context).size);
+    return RelativeRectTween(
+      begin: relativeRect,
+      end: RelativeRect.fill,
+    );
+  }
+}
+
+/// Passing a Widget builder to the Webpage Controller.
+class BuilderPageController extends WebPageController {
+  BuilderPageController({
+    required this.inBuilder,
+    this.initStateFunc,
+    this.disposeFunc,
+    PreferredSizeWidget? appBar,
+    Color? backgroundColor,
+    bool? resizeToAvoidBottomInset,
+    bool? primary,
+    DragStartBehavior? drawerDragStartBehavior,
+    bool? extendBody,
+    bool? extendBodyBehindAppBar,
+    Color? drawerScrimColor,
+    double? drawerEdgeDragWidth,
+    bool? drawerEnableOpenDragGesture,
+    bool? endDrawerEnableOpenDragGesture,
+    String? restorationId,
+    ScrollPhysics? physics,
+    State? state,
+    this.popup,
+  }) : super(
+          appBar: appBar,
+          backgroundColor: backgroundColor,
+          resizeToAvoidBottomInset: resizeToAvoidBottomInset,
+          primary: primary,
+          drawerDragStartBehavior: drawerDragStartBehavior,
+          extendBody: extendBody,
+          extendBodyBehindAppBar: extendBodyBehindAppBar,
+          drawerScrimColor: drawerScrimColor,
+          drawerEdgeDragWidth: drawerEdgeDragWidth,
+          drawerEnableOpenDragGesture: drawerEnableOpenDragGesture,
+          endDrawerEnableOpenDragGesture: endDrawerEnableOpenDragGesture,
+          restorationId: restorationId,
+          physics: physics,
+          state: state,
+        );
+  final WidgetBuilder inBuilder;
+  final void Function()? initStateFunc;
+  final void Function()? disposeFunc;
+  final bool? popup;
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (initStateFunc != null) {
+      initStateFunc!();
+    }
+  }
+
+  @override
+  void dispose() {
+    if (disposeFunc != null) {
+      disposeFunc!();
+    }
+    super.dispose();
+  }
+
+  @override
+  Widget? builder(BuildContext context) => inBuilder(context);
 }

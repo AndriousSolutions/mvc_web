@@ -122,13 +122,6 @@ class PopMenu extends AppPopupMenu<String> {
         await DialogBox(
           title: I10n.s('Current Language'),
           body: [spinner],
-          // button01: Option(
-          //     text: I10n.s('OK'),
-          //     onPressed: () {
-          //       spinner.onSelectedItemChanged(initialItem);
-          //     },
-          //     result: true),
-          // button02: Option(text: I10n.s('Cancel'), result: false),
           press01: () {
             spinner.onSelectedItemChanged(initialItem);
           },

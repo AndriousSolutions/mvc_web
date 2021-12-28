@@ -26,21 +26,24 @@ abstract class ScaffoldScreenController extends BasicScrollController {
     this.drawerEnableOpenDragGesture,
     this.endDrawerEnableOpenDragGesture,
     this.restorationId,
-  }) : super();
-
-  @override
-  void initState() {
-    super.initState();
-    // This function gets called repeatedly. StatefulWidget gets rebuilt?
-    _widget = widget as ScaffoldScreenWidget;
-  }
-
-  ScaffoldScreenWidget? _widget;
+    State? state,
+  }) : super(state);
 
   /// Provide a appBar using this function instead.
-  PreferredSizeWidget? onAppBar() => _widget == null || _widget?.title == null
-      ? null
-      : AppBar(title: Text(_widget?.title ?? ''));
+  PreferredSizeWidget? onAppBar() {
+    final _widget = widget as ScaffoldScreenWidget;
+    return _widget.title == null
+        ? null
+        : AppBar(
+            title: Text(_widget.title ?? ''),
+            actions: [
+              Padding(
+                padding: EdgeInsets.only(right: screenSize.width * 0.05),
+                child: const BackButton(),
+              )
+            ],
+          );
+  }
 
   /// Provide the body of the Scaffold widget
   Widget? body(BuildContext context);
@@ -85,13 +88,7 @@ abstract class ScaffoldScreenController extends BasicScrollController {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: appBar ?? onAppBar()
-        // ??
-        // PreferredSize(
-        //   preferredSize: Size(screenSize.width, 1000),
-        //   child: TopBarContents(opacity),
-        // ),
-        ,
+        appBar: appBar ?? onAppBar(),
         body: body(context),
         drawer: drawer(context),
         onDrawerChanged: onDrawerChanged(context),

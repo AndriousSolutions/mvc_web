@@ -2,4 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-export 'package:example/src/menu/app_menu.dart';
+export 'package:example/src/view/menu/app_menu.dart';
+
+export 'package:example/src/view/counter_app_view.dart';

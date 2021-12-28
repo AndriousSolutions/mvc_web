@@ -31,7 +31,14 @@ abstract class BasicScrollStatefulWidget extends StatefulWidget {
 }
 
 abstract class BasicScrollController extends ControllerMVC {
-  BasicScrollController([StateMVC? state]) : super(state);
+  BasicScrollController([State? state])
+      : _state = state,
+        super(state is StateMVC ? state : null) {
+    // Add the same State object to all 'Web Page Controllers'
+    final state = StateSet.to<_BasicScrollState>();
+    addState(state);
+  }
+  State? _state;
 
   @override
   @mustCallSuper
@@ -47,8 +54,20 @@ abstract class BasicScrollController extends ControllerMVC {
 
   @override
   void dispose() {
+    _state = null;
     _scrollController.dispose();
     super.dispose();
+  }
+
+  @override
+  void setState(VoidCallback fn) {
+    if (_state != null) {
+      if (_state!.mounted) {
+        _state!.setState(fn);
+      }
+    } else {
+      super.setState(fn);
+    }
   }
 
   late ScrollController _scrollController;
@@ -83,8 +102,8 @@ abstract class BasicScrollController extends ControllerMVC {
   static bool _smallScreen = false;
 
   /// Supply the widget through the controller.
-  BasicScrollStatefulWidget get widget =>
-      state!.widget as BasicScrollStatefulWidget;
+  BasicScrollStatefulWidget? get widget =>
+      state?.widget as BasicScrollStatefulWidget;
 
   /// Is the phone orientated in Portrait
   bool get inPortrait => _orientation == Orientation.portrait;

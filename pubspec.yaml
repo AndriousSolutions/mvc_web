@@ -1,8 +1,10 @@
 name: mvc_web
 description: Web App Flutter Framework using the MVC design pattern
-version: 1.2.0
+
+version: 1.3.0
+
 homepage: www.andrioussolutions.com
-repository: https://github.com/Andrious/mvc_web
+repository: https://github.com/AndriousSolutions/mvc_web
 
 environment:
   sdk: ">=2.15.0 <3.0.0"

@@ -9,42 +9,16 @@ class WebPageWidget extends WebPageBase {
     Key? key,
     required this.controller,
     String? title,
-    this.coverImage,
-    this.coverBanner,
-    this.hasAccessBar,
     this.hasBottomBar,
-  }) : super(controller, key: key, title: title);
+  }) : super(controller, key: key, title: title) {
+    controller.widget = this;
+  }
   final WebPageController controller;
-  final String? coverImage;
-  final bool? coverBanner;
-  final bool? hasAccessBar;
   final bool? hasBottomBar;
-
-  /// Main Content
-  List<Widget> withBottomBar05(BuildContext context, [WebPageWidget? widget]) =>
-      controller.withBottomBar05(context, widget ?? this);
-
-  /// Main content
-  List<Widget>? withHeader04(BuildContext context, [WebPageWidget? widget]) =>
-      controller.withHeader04(context, widget ?? this);
-
-  /// Website's header
-  List<Widget>? withBanner03(BuildContext context, [WebPageWidget? widget]) =>
-      controller.withBanner03(context, widget ?? this);
-
-  List<Widget>? withHeaderBar02(BuildContext context,
-          [WebPageWidget? widget]) =>
-      controller.withHeaderBar02(context, widget ?? this);
-
-  List<Widget>? header01(BuildContext context, [WebPageWidget? widget]) =>
-      controller.header01(context, widget ?? this);
-
-  List<Widget>? accessBar(BuildContext context, [WebPageWidget? widget]) =>
-      controller.accessBar(context, widget ?? this);
 }
 
-/// Controller
-class WebPageController extends WebPageBaseController {
+/// Controller for the Webpage framework
+abstract class WebPageController extends WebPageBaseController {
   //
   WebPageController({
     PreferredSizeWidget? appBar,
@@ -60,6 +34,7 @@ class WebPageController extends WebPageBaseController {
     bool? endDrawerEnableOpenDragGesture,
     String? restorationId,
     ScrollPhysics? physics,
+    State? state,
   }) : super(
           appBar: appBar,
           backgroundColor: backgroundColor,
@@ -74,13 +49,27 @@ class WebPageController extends WebPageBaseController {
           endDrawerEnableOpenDragGesture: endDrawerEnableOpenDragGesture,
           restorationId: restorationId,
           physics: physics,
+          state: state,
         );
 
+  /// Supply the widget through the controller.
   @override
-  void initState() {
-    super.initState();
-    // This function gets called repeatedly. StatefulWidget gets rebuilt?
-    _widget = widget as WebPageWidget;
+  WebPageWidget? get widget {
+    if (_widget == null) {
+      final stateWidget = state?.widget;
+      // Flutter errors if you cast a null
+      if (stateWidget != null) {
+        _widget = stateWidget as WebPageWidget;
+      }
+    }
+    return _widget;
+  }
+
+  /// Free to explicitly assign the widget.
+  set widget(WebPageWidget? widget) {
+    if (widget != null) {
+      _widget = widget;
+    }
   }
 
   WebPageWidget? _widget;
@@ -89,225 +78,69 @@ class WebPageController extends WebPageBaseController {
   T? webPageOf<T extends WebPageWidget>(BuildContext context) =>
       BasicScrollController.of<T>(context);
 
+  /// Create your webpage or web screen
+  /// or return null and implement the buildList() function instead.
+  @override
+  Widget? builder(BuildContext context);
+
+  /// Create your webpage or web screen
+  @override
+  List<Widget>? buildList(BuildContext context) => null;
+
+  /// Provide a appBar here as well.
+  /// Otherwise a default AppBar is implemented.
+  @override
+  PreferredSizeWidget? onAppBar() => super.onAppBar();
+
+  /// A bottom bar for every web page.
+  // List<Widget>
+  @override
+  Column? onBottomBar(BuildContext context, [WebPageWidget? widget]) => null;
+
   /// Possible Screen overlay
   @override
   StackWidgetProperties? screenOverlay(BuildContext context) => null;
 
   @override
-  List<Widget>? child(BuildContext context, [WebPageWidget? widget]) {
-    // Supply the 'parent' StatefulWidget.
-    if (widget == null) {
-      widget ??= _widget;
-    } else {
-      // Assign to the property.
-      _widget ??= widget;
-    }
+  List<Widget>? persistentFooterButtons(BuildContext context) => null;
 
-    List<Widget>? widgets;
+  @override
+  Widget? drawer(BuildContext context) => null;
 
-    try {
-      /// children05
-      widgets = widget?.withBottomBar05(context, widget);
-      widgets ??= withBottomBar05(context, widget);
-    } catch (ex, stack) {
-      widgets = null;
-      FlutterError.reportError(FlutterErrorDetails(
-        exception: ex,
-        stack: stack,
-        library: 'web_page.dart',
-        context: ErrorDescription('widgets = children04(context)'),
-      ));
-      // Make the error known if under development.
-      if (App.inDebugger) {
-        rethrow;
-      }
-    }
+  @override
+  DrawerCallback? onDrawerChanged(BuildContext context) => null;
 
-    // No content was generated;
-    if (widgets == null) {
-      //
-      final FlutterErrorDetails details = FlutterErrorDetails(
-        exception: Exception('No web content was supplied?'),
-        library: 'web_page.dart',
-        context: ErrorDescription(
-            "Please, look to the 'controller' for providing content."),
-      );
+  @override
+  Widget? endDrawer(BuildContext context) => null;
 
-      FlutterError.reportError(details);
+  @override
+  DrawerCallback? onEndDrawerChanged(BuildContext context) => null;
 
-      // Notify the developer. Leave 'blank' in production.
-      if (App.inDebugger) {
-        widgets = [ErrorWidget.builder(details)];
-      }
-    }
-    return widgets;
-  }
+  @override
+  Widget? bottomNavigationBar(BuildContext context) => null;
 
-  /// Main Content
-  List<Widget> withBottomBar05(BuildContext context, [WebPageWidget? widget]) {
-    // Supply the 'parent' StatefulWidget.
-    widget ??= _widget;
+  @override
+  Widget? bottomSheet(BuildContext context) => null;
 
-    final List<Widget> children = [];
-
-    List<Widget>? widgets;
-
-    try {
-      widgets = widget?.withBanner03(context, widget);
-      widgets ??= withBanner03(context, widget);
-    } catch (ex) {
-      widgets = null;
-      // Announce the error if under development
-      if (App.inDebugger) {
-        rethrow;
-      }
-    }
-    // Introduce a Stack widget if children03 was implemented.
-    if (widgets != null && widgets.isNotEmpty) {
-      /// children03
-      children.add(
-        Stack(
-          children: widgets,
-        ),
-      );
-    }
-    try {
-      /// children04
-      List<Widget>? header04 = widget?.withHeader04(context, widget);
-      header04 ??= withHeader04(context, widget);
-      if (header04 != null) {
-        widgets ??= [];
-        widgets.addAll(header04);
-      }
-    } catch (ex) {
-      widgets = null;
-      // Announce the error if under development
-      if (App.inDebugger) {
-        rethrow;
-      }
-    }
-    if (widgets != null && widgets.isNotEmpty) {
-      children.addAll(widgets);
-    }
-    return children;
-  }
-
-  /// Main content
-  List<Widget>? withHeader04(BuildContext context, [WebPageWidget? widget]) =>
-      null;
-
-  /// Website's header
-  List<Widget>? withBanner03(BuildContext context, [WebPageWidget? widget]) {
-    // Supply the 'parent' StatefulWidget.
-    widget ??= _widget;
-
-    final _screenSize = screenSize;
-
-    List<Widget>? widgets;
-
-    try {
-      widgets = widget?.withHeaderBar02(context, widget);
-      widgets ??= withHeaderBar02(context, widget);
-    } catch (ex) {
-      widgets = null;
-    }
-
-    if (!inSmallScreen &&
-        (widget?.coverBanner ?? true) &&
-        widget?.coverImage != null) {
-      List<Widget>? coverImage;
-
-      coverImage = [
-        SizedBox(
-          height: _screenSize.height * 0.45,
-          width: _screenSize.width,
-          child: Image.asset(
-            (widget?.coverImage)!,
-            fit: BoxFit.cover,
-          ),
-        ),
-      ];
-
-      if (widgets != null && widgets.isNotEmpty) {
-        /// children02
-        coverImage.add(Column(children: widgets));
-        widgets = coverImage;
-      }
-    }
-    return widgets;
-  }
-
-  List<Widget>? withHeaderBar02(BuildContext context, [WebPageWidget? widget]) {
-    // Supply the 'parent' StatefulWidget.
-    widget ??= _widget;
-
-    List<Widget>? widgets;
-    try {
-      widgets = widget?.header01(context, widget);
-      widgets ??= header01(context, widget);
-    } catch (ex) {
-      widgets = null;
-    }
-    // List<Widget>? bar;
-    // if (!inSmallScreen && (_widget!.hasAccessBar ?? true)) {
-    //   List<Widget>? bar = widget?.accessBar(context, widget);
-    //   bar ??= accessBar(context, widget);
-    // }
-    if (widgets != null && widgets.isNotEmpty) {
-      widgets = [
-//      if (bar != null) bar,
-        Column(
-          /// children01
-          children: widgets,
-        ),
-      ];
-    }
-    return widgets;
-  }
-
-  List<Widget>? header01(BuildContext context, [WebPageWidget? widget]) => null;
-
+  /// Possible 'access bar' near the top of the screen
   List<Widget>? accessBar(BuildContext context, [WebPageWidget? widget]) =>
       null;
 }
 
-class WebPageContainer extends StatelessWidget {
-  const WebPageContainer({Key? key, this.child}) : super(key: key);
-  final Widget? child;
-
-  @override
-  Widget build(BuildContext context) {
-    final screenSize = App.screenSize;
-    return Container(
-      margin: EdgeInsets.fromLTRB(
-        screenSize.width * 0.05,
-        screenSize.height * 0.05,
-        screenSize.width * 0.05,
-        screenSize.height * 0.05,
-      ),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(30),
-      ),
-      child: child ?? builder(context) ?? const SizedBox(),
-    );
-  }
-
-  /// A subclass can override this function. It's called in build() function.
-  Widget? builder(BuildContext context) => null;
-}
-
+/// A variation of the WebPageWidget---no need to supply a controller
+/// You can supply controller properties instead.
+/// The Controller is created for you.
+///
+/// Uses the 'default' bottombar if any is available.
 class WebPageWrapper extends WebPageWidget {
   WebPageWrapper({
     Key? key,
-    Widget? child,
+    this.child,
     this.children,
     String? title,
     PreferredSizeWidget? appBar,
     WebPageController? controller,
-    String? coverImage,
-    bool coverBanner = true,
-    bool accessBar = true,
-    bool bottomBar = true,
+    bool hasBottomBar = true,
     List<Widget>? Function(BuildContext context)? persistentFooterButtons,
     Widget? Function(BuildContext context)? drawer,
     DrawerCallback? Function(BuildContext context)? onDrawerChanged,
@@ -327,8 +160,7 @@ class WebPageWrapper extends WebPageWidget {
     bool? endDrawerEnableOpenDragGesture,
     String? restorationId,
     ScrollPhysics? physics,
-  })  : assert(child != null || (children != null && children.isNotEmpty)),
-        super(
+  }) : super(
           controller: controller ??
               WebPageControllerWrapper(
                 persistentFooterButtons: persistentFooterButtons,
@@ -354,26 +186,10 @@ class WebPageWrapper extends WebPageWidget {
               ),
           key: key,
           title: title,
-          coverImage: coverImage,
-          coverBanner: coverBanner,
-          hasAccessBar: accessBar,
-          hasBottomBar: bottomBar,
-        ) {
-    // Incorporate the child widget
-    if (child != null) {
-      _child.add(child);
-    }
-  }
-  final List<Widget> _child = [];
+          hasBottomBar: hasBottomBar,
+        );
+  final Widget? child;
   final List<Widget>? children;
-
-  @override
-  List<Widget>? withHeader04(BuildContext context, [WebPageWidget? widget]) =>
-      children;
-
-  @override
-  List<Widget> child(context, [WebPageWidget? widget]) =>
-      _child.isNotEmpty ? _child : super.child(context)!;
 }
 
 class WebPageControllerWrapper extends WebPageController {
@@ -431,15 +247,22 @@ class WebPageControllerWrapper extends WebPageController {
 
   WebPageWrapper? _wrapper;
 
-  /// Supply the widget's function instead.
   @override
-  List<Widget>? withHeader04(BuildContext context, [WebPageWidget? widget]) =>
-      _wrapper!.children;
+  Widget builder(BuildContext context) => _wrapper?.child ?? const SizedBox();
 
-  /// Supply the widget's function instead.
   @override
-  List<Widget>? child(BuildContext context, [WebPageWidget? widget]) =>
-      _wrapper!._child.isNotEmpty ? _wrapper!._child : super.child(context)!;
+  List<Widget> buildList(BuildContext context) =>
+      _wrapper?.children ?? [const SizedBox()];
+
+  // /// Supply the widget's function instead.
+  // @override
+  // List<Widget>? withHeader04(BuildContext context, [WebPageWidget? widget]) =>
+  //     _wrapper!.children;
+  //
+  // /// Supply the widget's function instead.
+  // @override
+  // List<Widget>? child(BuildContext context, [WebPageWidget? widget]) =>
+  //     _wrapper!._child.isNotEmpty ? _wrapper!._child : super.child(context)!;
 
   List<Widget>? Function(BuildContext context)? _persistentFooterButtons;
   Widget? Function(BuildContext context)? _drawer;
@@ -480,217 +303,6 @@ class WebPageControllerWrapper extends WebPageController {
       _bottomSheet == null ? null : _bottomSheet!(context);
 }
 
-/// Popup window
-/// Provides an animated popup.
-class PopupPage extends WebPageWidget {
-  PopupPage({
-    Key? key,
-    required this.builder,
-    this.initState,
-    this.dispose,
-    String? title,
-    PreferredSizeWidget? appBar,
-    String? coverImage,
-    bool? coverBanner,
-    bool? hasAccessBar,
-    bool? hasBottomBar,
-    Color? backgroundColor,
-    bool? resizeToAvoidBottomInset,
-    bool? primary,
-    DragStartBehavior? drawerDragStartBehavior,
-    bool? extendBody,
-    bool? extendBodyBehindAppBar,
-    Color? drawerScrimColor,
-    double? drawerEdgeDragWidth,
-    bool? drawerEnableOpenDragGesture,
-    bool? endDrawerEnableOpenDragGesture,
-    String? restorationId,
-    ScrollPhysics? physics,
-  }) : super(
-          controller: BuilderPageController(
-            builder: builder,
-            initStateFunc: initState,
-            disposeFunc: dispose,
-            hasBottomBar: hasBottomBar ?? false,
-            appBar: appBar,
-            backgroundColor: backgroundColor,
-            resizeToAvoidBottomInset: resizeToAvoidBottomInset,
-            primary: primary,
-            drawerDragStartBehavior: drawerDragStartBehavior,
-            extendBody: extendBody,
-            extendBodyBehindAppBar: extendBodyBehindAppBar,
-            drawerScrimColor: drawerScrimColor,
-            drawerEdgeDragWidth: drawerEdgeDragWidth,
-            drawerEnableOpenDragGesture: drawerEnableOpenDragGesture,
-            endDrawerEnableOpenDragGesture: endDrawerEnableOpenDragGesture,
-            restorationId: restorationId,
-            physics: physics,
-          ),
-          key: key,
-          title: title,
-          coverImage: coverImage,
-          coverBanner: coverBanner,
-          hasAccessBar: hasAccessBar ?? false,
-          hasBottomBar: hasBottomBar ?? false,
-        );
-  final WidgetBuilder builder;
-  final void Function()? initState;
-  final void Function()? dispose;
-
-  @override
-  String get title => '';
-
-  @override
-  List<Widget>? child(BuildContext context, [WebPageWidget? widget]) =>
-      [builder(context)];
-
-  /// Create a popup window
-  static Future<T?> window<T>(
-    BuildContext parentContext,
-    WidgetBuilder child, {
-    String? title,
-    PreferredSizeWidget? appBar,
-    String? coverImage,
-    bool? coverBanner,
-    bool? accessBar,
-    bool? bottomBar,
-    Color? backgroundColor,
-    bool? resizeToAvoidBottomInset,
-    bool? primary,
-    DragStartBehavior? drawerDragStartBehavior,
-    bool? extendBody,
-    bool? extendBodyBehindAppBar,
-    Color? drawerScrimColor,
-    double? drawerEdgeDragWidth,
-    bool? drawerEnableOpenDragGesture,
-    bool? endDrawerEnableOpenDragGesture,
-    String? restorationId,
-    ScrollPhysics? physics,
-    Curve? curve,
-    void Function()? initState,
-    void Function()? dispose,
-  }) async {
-    final T? result = await Navigator.of(parentContext).push<T>(
-      PageRouteBuilder<T>(
-        pageBuilder: (context, animation, secondaryAnimation) => PopupPage(
-          builder: (_) => child(parentContext),
-          initState: initState,
-          dispose: dispose,
-          title: title,
-          appBar: appBar,
-          coverImage: coverImage,
-          coverBanner: coverBanner,
-          hasAccessBar: accessBar,
-          hasBottomBar: bottomBar,
-          backgroundColor: backgroundColor,
-          resizeToAvoidBottomInset: resizeToAvoidBottomInset,
-          primary: primary,
-          drawerDragStartBehavior: drawerDragStartBehavior,
-          extendBody: extendBody,
-          extendBodyBehindAppBar: extendBodyBehindAppBar,
-          drawerScrimColor: drawerScrimColor,
-          drawerEdgeDragWidth: drawerEdgeDragWidth,
-          drawerEnableOpenDragGesture: drawerEnableOpenDragGesture,
-          endDrawerEnableOpenDragGesture: endDrawerEnableOpenDragGesture,
-          restorationId: restorationId,
-          physics: physics,
-        ),
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          final rectAnimation = _createTween(parentContext)
-              .chain(CurveTween(curve: curve ?? Curves.ease))
-              .animate(animation);
-          return Stack(
-            children: [
-              PositionedTransition(rect: rectAnimation, child: child),
-            ],
-          );
-        },
-      ),
-    );
-    return result;
-  }
-
-  /// Define the transition used in the animation
-  ///
-  //todo: If context is null?
-  static Tween<RelativeRect> _createTween(BuildContext context) {
-    final box = context.findRenderObject() as RenderBox;
-    final rect = box.localToGlobal(Offset.zero) & box.size;
-    final relativeRect =
-        RelativeRect.fromSize(rect, MediaQuery.of(context).size);
-    return RelativeRectTween(
-      begin: relativeRect,
-      end: RelativeRect.fill,
-    );
-  }
-}
-
-/// Passing a Widget builder to the Webpage Controller.
-class BuilderPageController extends WebPageController {
-  BuilderPageController({
-    required this.builder,
-    this.initStateFunc,
-    this.disposeFunc,
-    bool? hasBottomBar,
-    PreferredSizeWidget? appBar,
-    Color? backgroundColor,
-    bool? resizeToAvoidBottomInset,
-    bool? primary,
-    DragStartBehavior? drawerDragStartBehavior,
-    bool? extendBody,
-    bool? extendBodyBehindAppBar,
-    Color? drawerScrimColor,
-    double? drawerEdgeDragWidth,
-    bool? drawerEnableOpenDragGesture,
-    bool? endDrawerEnableOpenDragGesture,
-    String? restorationId,
-    ScrollPhysics? physics,
-  })  : _hasBottomBar = hasBottomBar ?? true,
-        super(
-          appBar: appBar,
-          backgroundColor: backgroundColor,
-          resizeToAvoidBottomInset: resizeToAvoidBottomInset,
-          primary: primary,
-          drawerDragStartBehavior: drawerDragStartBehavior,
-          extendBody: extendBody,
-          extendBodyBehindAppBar: extendBodyBehindAppBar,
-          drawerScrimColor: drawerScrimColor,
-          drawerEdgeDragWidth: drawerEdgeDragWidth,
-          drawerEnableOpenDragGesture: drawerEnableOpenDragGesture,
-          endDrawerEnableOpenDragGesture: endDrawerEnableOpenDragGesture,
-          restorationId: restorationId,
-          physics: physics,
-        );
-  final bool _hasBottomBar;
-  final WidgetBuilder builder;
-  final void Function()? initStateFunc;
-  final void Function()? disposeFunc;
-
-  @override
-  void initState() {
-    super.initState();
-    if (initStateFunc != null) {
-      initStateFunc!();
-    }
-  }
-
-  @override
-  void dispose() {
-    if (disposeFunc != null) {
-      disposeFunc!();
-    }
-    super.dispose();
-  }
-
-  @override
-  List<Widget>? withHeader04(BuildContext context, [WebPageWidget? widget]) =>
-      _hasBottomBar ? [builder(context)] : null;
-
-  @override
-  List<Widget> withBottomBar05(BuildContext context, [WebPageWidget? widget]) =>
-      !_hasBottomBar ? [builder(context)] : super.withBottomBar05(context);
-}
-
 /// Wrap widget in an InteractiveViewer when appropriate.
 Widget interactiveViewer(Widget widget, {bool wrap = true}) {
 //
@@ -708,4 +320,29 @@ Widget interactiveViewer(Widget widget, {bool wrap = true}) {
   }
 
   return widget;
+}
+
+class WebPageContainer extends StatelessWidget {
+  const WebPageContainer({Key? key, this.child}) : super(key: key);
+  final Widget? child;
+
+  @override
+  Widget build(BuildContext context) {
+    final screenSize = App.screenSize;
+    return Container(
+      margin: EdgeInsets.fromLTRB(
+        screenSize.width * 0.05,
+        screenSize.height * 0.05,
+        screenSize.width * 0.05,
+        screenSize.height * 0.05,
+      ),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(30),
+      ),
+      child: child ?? builder(context) ?? const SizedBox(),
+    );
+  }
+
+  /// A subclass can override this function.
+  Widget? builder(BuildContext context) => null;
 }
