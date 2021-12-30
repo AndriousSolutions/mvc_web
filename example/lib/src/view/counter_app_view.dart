@@ -13,7 +13,7 @@ class CounterApp extends StatefulWidget {
   State createState() => _CounterAppState();
 }
 
-class _CounterAppState extends State<CounterApp> {
+class _CounterAppState extends StateMVC<CounterApp> {
   @override
   void initState() {
     super.initState();
@@ -46,10 +46,10 @@ class _CounterAppState extends State<CounterApp> {
               (_smallScreen ? (_landscape ? 0.05 : 0.05) : 0.05),
         ),
         child: FloatingActionButton(
-          onPressed: con.onPressed,
-//           onPressed: () => setState(() {
-//             con.incrementCounter();
-//           }),
+//          onPressed: con.onPressed,
+          onPressed: () => setState(() {
+            con.incrementCounter();
+          }),
           child: const Icon(Icons.add),
         ),
       ),

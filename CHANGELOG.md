@@ -1,4 +1,9 @@
 
+## 1.3.0+02
+- _this?.addState(state);
+- class _CounterAppState extends StateMVC<CounterApp> {
+- Corrected README.md
+
 ## 1.3.0
  December 28, 2021
 - final state = StateSet.to<_BasicScrollState>();

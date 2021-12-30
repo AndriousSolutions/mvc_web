@@ -10,12 +10,21 @@ import 'package:example/src/view.dart';
 
 /// The Controller determines the content provided.
 class CounterAppController extends WebPageController {
-  factory CounterAppController([State? state]) =>
-      _this ??= CounterAppController._(state);
-
-  CounterAppController._([State? state])
+  factory CounterAppController([StateMVC? state]) {
+    _this ??= CounterAppController._();
+    _this?.addState(state);
+    return _this!;
+  }
+  CounterAppController._()
       : model = CounterAppModel(),
-        super(state: state);
+        super(
+          appBar: AppBar(
+            title: I10n.t('Flutter Demo Home Page'),
+            actions: [
+              popupMenu(),
+            ],
+          ),
+        );
 
   static CounterAppController? _this;
   final CounterAppModel model;
@@ -56,10 +65,10 @@ class CounterAppController extends WebPageController {
               (_smallScreen ? (_landscape ? 0.05 : 0.05) : 0.05),
         ),
         child: FloatingActionButton(
-          onPressed: onPressed,
-//           onPressed: () => setState(() {
-//             con.incrementCounter();
-//           }),
+//          onPressed: onPressed,
+          onPressed: () => setState(() {
+            incrementCounter();
+          }),
           child: const Icon(Icons.add),
         ),
       ),
@@ -68,6 +77,7 @@ class CounterAppController extends WebPageController {
 
   /// You're free to mimic Flutter's own API
   /// The Controller is able to talk to the View (the State object)
+  /// and call the setState() function.
   void onPressed() => setState(() => model.incrementCounter());
 
   void incrementCounter() => model.incrementCounter();
