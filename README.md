@@ -1,5 +1,5 @@
 # MVC Web
-![Flutter WWW](https://user-images.githubusercontent.com/32497443/147723509-a711647d-cc9e-4aa4-85dd-64b95f77c677.jpg)
+![Flutter WWW](https://user-images.githubusercontent.com/32497443/147765368-d6a71ae6-ba4d-4275-8337-0d9d8879c113.png)
 
 [![Medium](https://img.shields.io/badge/Medium-Read-green?logo=Medium)](https://medium.com/p/f612461dc037/)
 [![Last Commit](https://img.shields.io/github/last-commit/AndriousSolutions/mvc_pattern)](https://github.com/AndriousSolutions/mvc_web/commits/master)

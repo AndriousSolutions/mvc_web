@@ -5,7 +5,7 @@
 import 'dart:convert' show utf8;
 
 // ignore: avoid_web_libraries_in_flutter
-import 'dart:html' show AnchorElement, Blob, FileReader, Url;
+//import 'dart:html' show AnchorElement, Blob, FileReader, Url;
 
 import 'package:file_picker/file_picker.dart';
 
@@ -131,5 +131,32 @@ class WebUtils {
       return '';
     }
     return file.trim().split('/').last;
+  }
+
+  /// Returns a empty Map if an error occurs.
+  Map<String, String> params() {
+    Map<String, String> params;
+    Uri uri;
+    try {
+      uri = Uri.dataFromString(window.location.href);
+      params = uri.queryParameters;
+    } catch (ex) {
+      // Empty if there's a problem
+      params = {};
+    }
+    return params;
+  }
+
+  /// Returns the url path if any
+  /// Returns an empty string otherwise.
+  String urlPath() {
+    String path;
+    try {
+      path = window.location.pathname!;
+    } catch (ex) {
+      // Empty if there's a problem
+      path = '';
+    }
+    return path;
   }
 }
