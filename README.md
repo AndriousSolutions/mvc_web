@@ -16,7 +16,7 @@ Instead, always go up to the '**major**' semantic version number when installing
 And so, in this case, add this to your package's pubspec.yaml file:
 ```dart
 dependencies:
-   mvc_web: ^1.0.0
+   mvc_web: ^1.5.0
 ```
 
 ## What ist it?
