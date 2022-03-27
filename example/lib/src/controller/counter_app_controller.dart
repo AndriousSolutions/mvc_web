@@ -17,21 +17,14 @@ class CounterAppController extends WebPageController {
   }
   CounterAppController._()
       : model = CounterAppModel(),
-        super(
-          appBar: AppBar(
-            title: I10n.t('Flutter Demo Home Page'),
-            actions: [
-              popupMenu(),
-            ],
-          ),
-        );
+        super();
 
   static CounterAppController? _this;
   final CounterAppModel model;
 
   @override
   PreferredSizeWidget? onAppBar() => AppBar(
-        title: I10n.t('Flutter Demo Home Page'),
+        title: L10n.t('Counter Page Demo'),
         actions: [
           popupMenu(),
         ],
@@ -48,7 +41,7 @@ class CounterAppController extends WebPageController {
     final _landscape = inLandscape;
     return Column(children: <Widget>[
       SizedBox(height: _screenSize.height * 0.3),
-      I10n.t('You have pushed the button this many times:'),
+      L10n.t('You have pushed the button this many times:'),
       SizedBox(height: _screenSize.height * 0.05),
       Text(
         '$counter',

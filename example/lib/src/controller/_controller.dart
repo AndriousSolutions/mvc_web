@@ -2,4 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-export 'package:example/src/model/_model.dart';
+export 'package:example/src/controller/counter_app_controller.dart';
+
+export 'package:example/src/controller/translations_controller.dart';

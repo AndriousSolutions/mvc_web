@@ -1,9 +1,23 @@
 # MVC Web
-![Flutter WWW](https://user-images.githubusercontent.com/32497443/147765368-d6a71ae6-ba4d-4275-8337-0d9d8879c113.png)
+[![Flutter WWW](https://user-images.githubusercontent.com/32497443/147765368-d6a71ae6-ba4d-4275-8337-0d9d8879c113.png)](https://medium.com/follow-flutter/a-flutter-web-framework-f612461dc037)
 
 [![Medium](https://img.shields.io/badge/Medium-Read-green?logo=Medium)](https://medium.com/p/f612461dc037/)
 [![Last Commit](https://img.shields.io/github/last-commit/AndriousSolutions/mvc_pattern)](https://github.com/AndriousSolutions/mvc_web/commits/master)
+
 Supplies a custom framework used for more comprehensive and more interactive Web app.
+
+## Installing
+I don't like the version number suggested in the '[Installing](https://pub.dev/packages/mvc_web#-installing-tab-)' page.
+Instead, always go up to the '**major**' semantic version number when installing this library package. This means always trailing with two zero, '**.0.0**'. This allows you to take in any '**minor**' versions introducing new features as well as any '**patch**' versions that involves bugfixes. Example, to install version 7.9.2, use 7.0.0. Thus, the bug fix, 7.9.2, will be installed the next time you 'upgrade' the dependencies.
+1. **patch** - bugfixes
+2. **minor** - Introduced new features
+3. **major** - Essentially made a new app. It's broken backwards-compatibility and has a completely new user experience. You won't get this version until you increment the **major** number in the pubspec.yaml file.
+
+And so, in this case, add this to your package's pubspec.yaml file:
+```dart
+dependencies:
+   mvc_web: ^1.0.0
+```
 
 ## What ist it?
 This is a custom framework that works like Flutter following an established design pattern and merely brings together all the widgets that makeup Flutter and runs the appropriate ones depending on the parameter values you supply.
@@ -29,20 +43,20 @@ Back to the example app, the next two screenshots below focus on the 'home' page
 ![MyApp](https://user-images.githubusercontent.com/32497443/147724296-e7c97c9b-a8a5-4b67-a0f7-9e1268425062.png)
 ![MyHomePage](https://user-images.githubusercontent.com/32497443/147724357-a3ffa3a4-11c4-4cfc-a42c-129c22f104ba.png)
 
-The class, _CounterAppController_, extends the class, WebPageController. It too, as part of the framework, carries a long list of parameter options. See below. On closer inspection, you'll recognize these parameters are traditionally more associated with a Scaffold widget. Again, a custom framework should give ready access to the capabilities of its underlying platform or framework - Flutter in this case.
+The class, _CounterAppController_, extends the class, WebPageController. It too, as part of the framework, carries a long list of parameter options. See below. On closer inspection, you'll recognize these parameters are traditionally more associated with a Scaffold widget. Again, a custom framework should give ready access to the capabilities of its underlying platform or framework-Flutter in this case.
 
 ![WebPageController](https://user-images.githubusercontent.com/32497443/147724444-7f6e7c4c-4919-4a41-acc1-95fac5054fd2.png)
 
-Now, as you'll see, this particular part of the framework is designed to work with Web apps. And so, further along in the WebPageController class, you have the means to do just that. This is an abstract class, and so to get your Web app up and running, the builder() function is to be implemented. Further along, there are even more functions for your web page. You gotta love options, right? You'll recognize some of the function names listed and so will deduce what they pertain to.
+Now, as you'll see, this particular part of the framework is designed to work with Web apps. And so, further along in the WebPageController class, you have the means to do just that. This is an abstract class, and so to get your Web app up and running, the builder() function is to be implemented. Further along, there are even more functions for your web page. You'll recognize some of the function names listed and so will deduce what they pertain to.
 
 ![1_dhH7VuGFdUa-AVNdi5ZyiQ](https://user-images.githubusercontent.com/32497443/147724509-51916f19-9dca-4071-8e76-da38a14aa95e.png)
 
-Deeper in this framework, you'll find the anticipated Scaffold widget taking in the many parameter options and supplying default values when none are provided. All so you can build an interactive and comprehensive Web app in Flutter. Gotta love it.
+Deeper in this framework, you'll find the anticipated Scaffold widget taking in the many parameter options and supplying default values when none are provided. All so you can build an interactive and comprehensive Web app in Flutter.
 
 ![scaffold](https://user-images.githubusercontent.com/32497443/147724556-272d643b-e013-4266-b322-fa4a5065a705.png)
 
 Again, back to our example app. At first glance, you'll note the ever-important Controller class is using a factory constructor and thus implementing the Singleton design pattern. I find the role of a Controller is best served with a single instance of that class throughout the life of the app. That's because it's called upon to respond to various system and user events throughout the course of its lifecycle and yet is to retain an ongoing and reliable state. A factory constructor readily accomplishes this.
-Next, note in the screenshot below, an Appbar is defined in the convenient onAppBar() function. However, being such a simple Appbar, it could have just as well been supplied as a parameter to the Controller's constructor. That's demonstrated in the second screenshot below. Gotta love options.
+Next, note in the screenshot below, an Appbar is defined in the convenient onAppBar() function. However, being such a simple Appbar, it could have just as well been supplied as a parameter to the Controller's constructor. That's demonstrated in the second screenshot below.
 
 ![CounterAppController](https://user-images.githubusercontent.com/32497443/147724679-c820bfb1-7224-48cf-8980-d6bf28cf7a73.png)
 ![CounterAppController](https://user-images.githubusercontent.com/32497443/147724732-069cf37b-acdf-43c5-9a74-cbca463710b3.png)
@@ -57,7 +71,7 @@ And now to the crux of the matter. Inside your Web app's controller, the builder
 
 Now, an alternate approach would be to have the 'interface' (the View) supplied by a separate class in a separate library file altogether. The example app has this also implemented for demonstration purposes in a separate Dart file called, counter_app_view.dart. The previous builder() function is commented out below to make way for this separate class.
 
-Now which approach you use will depend on how 'modular' you wish an app's components to be with high cohesion and low coupling a common desire. In still other instances, it may come down to personal preference - like how one pronounces that fruit many consider a vegetable: "Tomatoes (/təˈmeɪtoʊz/); Tomatoes (/təˈmɑːtoʊz/)."
+Now which approach you use will depend on how 'modular' you wish an app's components to be with high cohesion and low coupling a common desire. In still other instances, it may come down to personal preference---like how one pronounces that fruit many consider a vegetable: "Tomatoes (/təˈmeɪtoʊz/); Tomatoes (/təˈmɑːtoʊz/)."
 
 ![builder](https://user-images.githubusercontent.com/32497443/147724932-e4719e5f-d67a-4802-b090-2272c630504d.png)
 
@@ -150,7 +164,7 @@ class CounterAppController extends WebPageController {
       : model = CounterAppModel(),
         super(
           appBar: AppBar(
-            title: I10n.t('Flutter Demo Home Page'),
+            title: I10n.t('Counter Page Demo'),
             actions: [
               popupMenu(),
             ],
@@ -162,7 +176,7 @@ class CounterAppController extends WebPageController {
 
   @override
   PreferredSizeWidget? onAppBar() => AppBar(
-        title: I10n.t('Flutter Demo Home Page'),
+        title: I10n.t('Counter Page Demo'),
         actions: [
           popupMenu(),
         ],
@@ -223,3 +237,6 @@ class CounterAppController extends WebPageController {
   );
 }
 ```
+
+## Article Link
+Read the [free Medium article](https://medium.com/follow-flutter/a-flutter-web-framework-f612461dc037#e2d2) for more info.

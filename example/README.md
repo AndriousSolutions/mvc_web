@@ -150,7 +150,7 @@ class CounterAppController extends WebPageController {
       : model = CounterAppModel(),
         super(
           appBar: AppBar(
-            title: I10n.t('Flutter Demo Home Page'),
+            title: I10n.t('Counter Page Demo'),
             actions: [
               popupMenu(),
             ],
@@ -162,7 +162,7 @@ class CounterAppController extends WebPageController {
 
   @override
   PreferredSizeWidget? onAppBar() => AppBar(
-        title: I10n.t('Flutter Demo Home Page'),
+        title: I10n.t('Counter Page Demo'),
         actions: [
           popupMenu(),
         ],

@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:example/src/controller.dart';
+
 import 'package:mvc_application/view.dart';
 
 /// Supply the app's popupmenu
@@ -88,12 +90,12 @@ class PopMenu extends AppPopupMenu<String> {
         PopupMenuItem(
           key: const Key('localeMenuItem'),
           value: 'locale',
-          child: Text('${I10n.s('Locale:')} ${App.locale!.toLanguageTag()}'),
+          child: Text('${L10n.s('Locale:')} ${App.locale!.toLanguageTag()}'),
         ),
         PopupMenuItem(
           key: const Key('aboutMenuItem'),
           value: 'about',
-          child: I10n.t('About'),
+          child: Text('About'.tr),
         ),
       ];
 
@@ -102,7 +104,7 @@ class PopMenu extends AppPopupMenu<String> {
     final appContext = App.context!;
     switch (value) {
       case 'locale':
-        final locales = I10n.supportedLocales!;
+        final locales = AppTrs.supportedLocales;
 
         final initialItem = locales.indexOf(App.locale!);
 
@@ -111,16 +113,15 @@ class PopMenu extends AppPopupMenu<String> {
             supportedLocales: locales,
             onSelectedItemChanged: (int index) async {
               // Retrieve the available locales.
-              final locale = I10n.getLocale(index);
+              final locale = AppTrs.getLocale(index);
               if (locale != null) {
-                I10n.onSelectedItemChanged(index);
                 App.locale = locale;
                 App.refresh();
               }
             });
 
         await DialogBox(
-          title: I10n.s('Current Language'),
+          title: 'Current Language'.tr,
           body: [spinner],
           press01: () {
             spinner.onSelectedItemChanged(initialItem);

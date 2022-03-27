@@ -16,8 +16,9 @@ class CounterApp extends StatefulWidget {
 class _CounterAppState extends StateMVC<CounterApp> {
   @override
   void initState() {
-    super.initState();
     con = CounterAppController(this);
+    // Allow for con.initState(); if any.
+    super.initState();
   }
 
   late CounterAppController con;
@@ -29,7 +30,7 @@ class _CounterAppState extends StateMVC<CounterApp> {
     final _landscape = con.inLandscape;
     return Column(children: <Widget>[
       SizedBox(height: _screenSize.height * 0.3),
-      I10n.t('You have pushed the button this many times:'),
+      Text('You have pushed the button this many times:'.tr),
       SizedBox(height: _screenSize.height * 0.05),
       Text(
         '${con.counter}',

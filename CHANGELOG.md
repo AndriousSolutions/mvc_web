@@ -1,4 +1,9 @@
 
+## 1.5.0
+ March 27, 2022
+- L10n_translator.dart
+- mvc_application 8.9.0
+
 ## 1.4.0
  December 30, 2021
 - Map<String, String> params() {   String urlPath() {

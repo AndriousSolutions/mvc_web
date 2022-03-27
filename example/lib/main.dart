@@ -8,11 +8,11 @@ import 'package:example/src/controller.dart';
 
 void main() => runApp(MyApp());
 
-class MyApp extends AppMVC {
+class MyApp extends AppStatefulWidget {
   MyApp({Key? key}) : super(key: key);
 
   @override
-  AppState createState() => AppState(
+  AppState createAppState() => AppState(
         theme: ThemeData(
           // This is the theme of your application.
           primarySwatch: Colors.blue,
@@ -22,9 +22,9 @@ class MyApp extends AppMVC {
           '/': (_) => MyHomePage(),
         }),
         // This is the app's localization
-        supportedLocales: I10n.supportedLocales,
+        supportedLocales: AppTrs.supportedLocales,
         localizationsDelegates: [
-          I10nDelegate(),
+          L10n.delegate!,
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
           GlobalMaterialLocalizations.delegate,
