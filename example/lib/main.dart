@@ -37,7 +37,7 @@ class MyApp extends AppStatefulWidget {
 
 class MyHomePage extends WebPageWidget {
   MyHomePage({
-    GlobalKey? key,
+    Key? key,
   }) : super(
           controller: CounterAppController(),
           key: key ?? GlobalKey(debugLabel: 'mvc_web_example'),

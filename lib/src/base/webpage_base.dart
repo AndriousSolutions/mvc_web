@@ -535,7 +535,7 @@ class StackWidgetProperties {
 /// Provides an animated popup.
 class PopupPage extends WebPageWidget {
   PopupPage({
-    GlobalKey? key,
+    Key? key,
     required this.inBuilder,
     this.initState,
     this.dispose,

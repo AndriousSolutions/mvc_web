@@ -1,5 +1,9 @@
 
 
+## 1.6.1
+ March 31, 2022
+- StatefulWidgets insist on Key and not GlobalKey unfortunately.
+
 ## 1.6.0
  March 31, 2022
 - // Got to be a Global Key. Don't want the State object to be rebuilt.
