@@ -6,11 +6,12 @@ import 'package:mvc_web/src/view.dart';
 
 class WebPageWidget extends WebPageBase {
   WebPageWidget({
-    Key? key,
+    // Got to be a Global Key. Don't want the State object to be rebuilt.
+    GlobalKey? key,
     required this.controller,
     String? title,
     this.hasBottomBar,
-  }) : super(controller, key: key, title: title) {
+  }) : super(controller, key: key ?? GlobalKey<StateMVC>(), title: title) {
     controller.widget = this;
   }
   final WebPageController controller;
@@ -134,7 +135,7 @@ abstract class WebPageController extends WebPageBaseController {
 /// Uses the 'default' bottombar if any is available.
 class WebPageWrapper extends WebPageWidget {
   WebPageWrapper({
-    Key? key,
+    GlobalKey? key,
     this.child,
     this.children,
     String? title,

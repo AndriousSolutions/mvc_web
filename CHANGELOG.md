@@ -1,4 +1,10 @@
 
+
+## 1.6.0
+ March 31, 2022
+- // Got to be a Global Key. Don't want the State object to be rebuilt.
+- mvc_application 8.0.0
+
 ## 1.5.0
  March 27, 2022
 - L10n_translator.dart

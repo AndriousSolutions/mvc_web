@@ -18,7 +18,7 @@ dependencies:
   auto_size_text: ^3.0.0
 
   # https://pub.dev/packages/mvc_application/
-  mvc_application: ^8.9.0  # mvc_pattern 8.8.2
+  mvc_application: ^8.0.0  # mvc_pattern 8.8.2
 #    path: ../../packages/mvc_application
 
   # https://pub.dev/packages/state_set/
