@@ -6,7 +6,9 @@ import 'dart:async';
 
 import 'package:mvc_web/src/view.dart';
 
+///
 class WebScrollbar extends StatefulWidget {
+  /// Supply a child widget and a Scroll controller.
   const WebScrollbar({
     required this.child,
     required this.controller,
@@ -19,12 +21,25 @@ class WebScrollbar extends StatefulWidget {
   })  : assert(heightFraction < 1.0 && heightFraction > 0.0),
         super(key: key);
 
+  ///
   final Widget child;
+
+  ///
   final ScrollController controller;
+
+  ///
   final double heightFraction;
+
+  ///
   final double width;
+
+  ///
   final Color color;
+
+  ///
   final Color backgroundColor;
+
+  ///
   final bool isAlwaysShown;
 
   @override
@@ -71,16 +86,5 @@ class _WebScrollbarState extends State<WebScrollbar> {
     }
 
     return widget.child;
-    // return NotificationListener<ScrollNotification>(
-    //   onNotification: (notification) {
-    //     if (mounted &&
-    //         notification.depth == 0 &&
-    //         notification is ScrollUpdateNotification) {
-    //       setState(() {});
-    //     }
-    //     return true;
-    //   },
-    //   child: widget.child,
-    // );
   }
 }

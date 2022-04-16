@@ -1,4 +1,13 @@
 
+## 1.7.0
+ April 16, 2022
+- // Notify dependencies of the App's InheritedWidget
+- notifyDependencies = true;
+- /// The State object's InheritedWidget
+- class _BasicInheritedWidget extends InheritedWidget {
+- /// Present the Scaffold widget to its own State object.
+- class _ScaffoldBuilder extends StatefulWidget {
+- sdk: ">=2.16.2 <3.0.0"
 
 ## 1.6.1
  March 31, 2022

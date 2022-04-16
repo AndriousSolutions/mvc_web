@@ -4,7 +4,9 @@
 
 import 'package:mvc_web/src/view.dart';
 
+/// Supplies an menu bar of sorts for a webpage.
 abstract class QuickAccessBar extends StatefulWidget {
+  ///
   const QuickAccessBar({Key? key}) : super(key: key);
 
   ///

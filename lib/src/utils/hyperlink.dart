@@ -6,9 +6,15 @@ import 'package:flutter/material.dart';
 
 import 'package:url_launcher/url_launcher.dart';
 
+/// A widget at displays a hyperlink
 class Hyperlink extends StatelessWidget {
+  /// Must supply a child widget and a url string.
   const Hyperlink(this.child, this.url, {Key? key}) : super(key: key);
+
+  ///
   final Widget? child;
+
+  ///
   final String? url;
 
   @override

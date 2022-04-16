@@ -1,13 +1,13 @@
 name: mvc_web
 description: A custom framework that works with Flutter and an established design pattern to build interactive and comprehensive Web apps.
 
-version: 1.6.1
+version: 1.7.0
 
 homepage: https://www.andrioussolutions.com
 repository: https://github.com/AndriousSolutions/mvc_web
 
 environment:
-  sdk: ">=2.16.1 <3.0.0"
+  sdk: ">=2.16.2 <3.0.0"
 #  flutter: ">=1.17.0"
 
 dependencies:
@@ -35,9 +35,11 @@ dependencies:
   universal_html: ^2.0.0
 
 dev_dependencies:
+
+  flutter_lints: ^1.0.0
+
   flutter_test:
     sdk: flutter
-  flutter_lints: ^1.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

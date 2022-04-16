@@ -8,6 +8,7 @@ import 'package:mvc_web/src/view.dart';
 
 /// The base
 abstract class BasicScrollStatefulWidget extends StatefulWidget {
+  /// Must supply a Webpage controller.
   const BasicScrollStatefulWidget(this._controller, {Key? key})
       : super(key: key);
 
@@ -30,7 +31,9 @@ abstract class BasicScrollStatefulWidget extends StatefulWidget {
   State createState() => _BasicScrollState(_controller);
 }
 
+/// The base class for the Webpage controller.
 abstract class BasicScrollController extends ControllerMVC {
+  /// Assign a State object to this class.
   BasicScrollController([State? state])
       : _state = state,
         super(state is StateMVC ? state : null) {
@@ -68,7 +71,20 @@ abstract class BasicScrollController extends ControllerMVC {
     } else {
       super.setState(fn);
     }
+    // Notify dependencies of the App's InheritedWidget
+    notifyDependencies = true;
   }
+
+  @override
+  void refresh() {
+    final _inState = state as InheritedStateMVC;
+    _inState.inheritedStatefulWidget.inheritedChildWidget =
+        _inState.buildChild(_inState.context);
+    super.refresh();
+  }
+
+  /// Notify the dependencies for the InheritedWidget
+  bool notifyDependencies = false;
 
   late ScrollController _scrollController;
 
@@ -92,8 +108,10 @@ abstract class BasicScrollController extends ControllerMVC {
   double get scrollPosition =>
       !_scrollController.hasClients ? 0 : _scrollController.offset;
 
+  ///
   double opacity = 0;
 
+  ///
   Size get screenSize => _screenSize;
   static late Size _screenSize;
 
@@ -126,9 +144,20 @@ abstract class BasicScrollController extends ControllerMVC {
   Widget build(BuildContext context);
 }
 
-class _BasicScrollState extends StateMVC<BasicScrollStatefulWidget>
+///
+class _BasicScrollState
+    extends InheritedStateMVC<BasicScrollStatefulWidget, _BasicInheritedWidget>
     with StateSet {
-  _BasicScrollState(BasicScrollController _controller) : super(_controller) {
+  //
+  _BasicScrollState(BasicScrollController _controller)
+      : super(
+          inheritedBuilder: (child) => _BasicInheritedWidget(
+            controller: _controller,
+            child: child,
+          ),
+          controller: _controller,
+        ) {
+    //
     _con = controller as BasicScrollController;
   }
   //
@@ -150,8 +179,11 @@ class _BasicScrollState extends StateMVC<BasicScrollStatefulWidget>
             ? _con._offset / (BasicScrollController._screenSize.height * 0.40)
             : 1;
 
-    return _con.build(context);
+    return super.buildWidget(context);
   }
+
+  @override
+  Widget buildChild(BuildContext context) => _con.build(context);
 
   /// Determine if the app is running on a 'small screen' or not.
   bool _isSmallScreen({Size? screenSize}) {
@@ -179,6 +211,43 @@ class _BasicScrollState extends StateMVC<BasicScrollStatefulWidget>
   bool _inSmallScreen = false;
 }
 
+/// The State object's InheritedWidget
+class _BasicInheritedWidget extends InheritedWidget {
+  const _BasicInheritedWidget({
+    Key? key,
+    required this.controller,
+    required Widget child,
+  }) : super(key: key, child: child);
+  //
+  final BasicScrollController controller;
+
+  @override
+  bool updateShouldNotify(covariant _BasicInheritedWidget oldWidget) {
+    //
+    bool notify = controller.notifyDependencies;
+
+    // Always return to false.
+    controller.notifyDependencies = false;
+
+    final oldController = oldWidget.controller;
+
+    if (!notify) {
+      notify = child != oldWidget.child;
+    }
+
+    if (!notify) {
+      notify = controller.opacity != oldController.opacity;
+    }
+
+    if (!notify) {
+      notify = controller.inPortrait != oldController.inPortrait;
+    }
+
+    return notify;
+  }
+}
+
+/// Scroll Controller
 class _BasicScrollController extends ScrollController {
   /// Creates a controller for a scrollable widget.
   ///

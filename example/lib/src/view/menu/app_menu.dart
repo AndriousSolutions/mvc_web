@@ -115,6 +115,7 @@ class PopMenu extends AppPopupMenu<String> {
               // Retrieve the available locales.
               final locale = AppTrs.getLocale(index);
               if (locale != null) {
+                // You must 'rebuild' the whole App all over again.
                 App.locale = locale;
                 App.refresh();
               }

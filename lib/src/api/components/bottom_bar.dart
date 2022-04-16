@@ -4,8 +4,12 @@
 
 import 'package:mvc_web/src/view.dart';
 
+/// Displays a list of child widgets along the bottom of a webpage.
 class BottomBar extends StatelessWidget {
+  ///
   const BottomBar({Key? key, required this.children}) : super(key: key);
+
+  ///
   final Column children;
 
   @override
@@ -24,6 +28,7 @@ class BottomBar extends StatelessWidget {
 
 /// Column
 class BottomBarColumn extends StatelessWidget {
+  /// Optional callback functions for the list of headings displayed in a column.
   const BottomBarColumn({
     required this.heading,
     required this.s1,
@@ -34,12 +39,26 @@ class BottomBarColumn extends StatelessWidget {
     this.onPressedS3,
     Key? key,
   }) : super(key: key);
+
+  ///
   final String heading;
+
+  ///
   final String s1;
+
+  ///
   final VoidCallback? onPressedS1;
+
+  ///
   final String s2;
+
+  ///
   final VoidCallback? onPressedS2;
+
+  ///
   final String s3;
+
+  ///
   final VoidCallback? onPressedS3;
 
   @override

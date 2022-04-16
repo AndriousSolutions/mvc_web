@@ -6,36 +6,48 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:universal_html/html.dart';
 
+/// Display an iframe
 class Iframe extends StatefulWidget {
+  ///
   Iframe({
     Key? key,
     // this.allow,
     // this.allowFullscreen,
     // this.allowPaymentRequest,
     // this.csp,
+    ///
     required this.height,
     // this.name,
     // this.referrerPolicy,
+    ///
     required this.src,
     // this.srcdoc,
+    ///
     required this.width,
     this.decoration,
   })  : iframe = IFrameElement(),
         super(key: key);
 
+  ///
   final IFrameElement iframe;
   // final String? allow;
   // final bool? allowFullscreen;
   // final bool? allowPaymentRequest;
   // final String? csp;
+  ///
   final String? height;
   // final String? name;
   // final String? referrerPolicy;
+  ///
   final String? src;
   // final String? srcdoc;
+  ///
   final String? width;
+
+  ///
   final Decoration? decoration;
 
+  ///
   DomTokenList? get sandbox => iframe.sandbox;
 
   @override

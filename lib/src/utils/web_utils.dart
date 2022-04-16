@@ -11,8 +11,10 @@ import 'package:file_picker/file_picker.dart';
 
 import 'package:universal_html/html.dart';
 
+/// Webpage utilities to retrieve a text file
+///
 class WebUtils {
-  //
+  ///
   Future<File?> textFile() async {
     //
     File? fileObj;
@@ -36,10 +38,12 @@ class WebUtils {
     return fileObj;
   }
 
+  /// Read a text file
   Future<List<String>> updateTextFile() async {
     return readTextFile();
   }
 
+  /// Read a text file.
   Future<List<String>> readTextFile() async {
     //
     List<String> text = [];
@@ -73,6 +77,7 @@ class WebUtils {
     return text;
   }
 
+  /// Save a text file.
   bool saveTextFile(List<String>? text, String? fileName) {
     //
     if (text == null || text.isEmpty) {
@@ -112,6 +117,7 @@ class WebUtils {
     return save;
   }
 
+  /// File extension
   String fileExt(String? file) {
     if (file == null || file.isEmpty) {
       return '';
@@ -126,6 +132,7 @@ class WebUtils {
     return ext;
   }
 
+  /// File name.
   String fileName(String? file) {
     if (file == null || file.isEmpty) {
       return '';

@@ -6,11 +6,14 @@ import 'package:mvc_web/src/view.dart';
 
 import 'package:url_launcher/url_launcher.dart';
 
+/// Calls the child widget to be displayed in the webpage
 abstract class WebPageBase extends ScaffoldScreenWidget
     with WebPageFeaturesMixin {
+  /// 'Nothing' is displayed if a Webpage controller is not provided.
   WebPageBase(this.webPageBaseController, {Key? key, String? title})
       : super(webPageBaseController, key: key, title: title);
 
+  ///
   final WebPageBaseController webPageBaseController;
 
   /// Create the webpage using this widget if necessary.
@@ -100,7 +103,9 @@ abstract class WebPageBase extends ScaffoldScreenWidget
       );
 }
 
+/// The Webpage controller for the WebPageBase StatefulWidget
 abstract class WebPageBaseController extends ScaffoldScreenController {
+  /// Many the Scaffold widget options.
   WebPageBaseController({
     PreferredSizeWidget? appBar,
     Color? backgroundColor,
@@ -150,11 +155,13 @@ abstract class WebPageBaseController extends ScaffoldScreenController {
   /// How the scroll view should respond to user input.
   final ScrollPhysics? physics;
 
+  /// Decribe the 'drag' behaviour.
   final DragStartBehavior? dragStartBehavior;
 
   /// Defaults to [Clip.hardEdge].
   final Clip? clipBehavior;
 
+  /// How the keyboard is removed from the screen.
   final ScrollViewKeyboardDismissBehavior? keyboardDismissBehavior;
 
   /// Create your webpage or web screen
@@ -231,12 +238,13 @@ abstract class WebPageBaseController extends ScaffoldScreenController {
 
     Widget? _overlay;
 
+    ///
+    stackProps = screenOverlay(context);
+
     /// Display the overlay if it exists
     if (_child == null) {
-      stackProps = screenOverlay(context);
       _child = stackProps?.child;
     } else {
-      stackProps = screenOverlay(context);
       _overlay = stackProps?.child;
     }
 
@@ -297,11 +305,12 @@ abstract class WebPageBaseController extends ScaffoldScreenController {
 
   /// The widget passed to the SingleChildScrollView in the parent class.
   Widget? scrollChild(BuildContext context) {
-    //
-    WebPageWidget? webPage =
+    /// Reference to the Webpage StatefulWidget
+    final WebPageWidget? webPage =
         widget is WebPageWidget ? widget as WebPageWidget : null;
 
-    List<Widget>? list = [];
+    /// The list of widgets finally displayed in the Webpage.
+    final List<Widget> list = [];
 
     // Retrieve the first and foremost webpage
     final Widget? _widget = builder(context);
@@ -346,6 +355,7 @@ abstract class WebPageBaseController extends ScaffoldScreenController {
       if (_bottomBar != null) {
         //
         list.add(SizedBox(height: screenSize.height / 10));
+
         list.add(_bottomBar);
       }
     }
@@ -434,31 +444,9 @@ abstract class WebPageBaseController extends ScaffoldScreenController {
   }
 }
 
-// class _WebPageBaseController extends WebPageBaseController {
-//   _WebPageBaseController([StateMVC? state]) : super(state: state);
-//
-//   @override
-//   PreferredSizeWidget? appBar(BuildContext context) => null;
-//
-//   /// Possibly overlay displayed on top of the screen.
-//   @override
-//   StackWidgetProperties? screenOverlay(
-//     BuildContext context, {
-//     AlignmentGeometry? alignment,
-//     TextDirection? textDirection,
-//     StackFit? fit,
-//     Clip? clipBehavior,
-//   }) =>
-//       null;
-//
-//   /// Possibly the main content on the screen.
-//   @override
-//   Widget? child(BuildContext context) => null;
-// }
-
 /// Containing standard functionality for a typical webpage.
 mixin WebPageFeaturesMixin {
-  //
+  /// Display an external webpage.
   Future<bool> uriBrowse(
     String? uri, {
     bool? forceSafariVC,
@@ -497,13 +485,19 @@ mixin WebPageFeaturesMixin {
   }
 }
 
+/// Provide a child Widget a 'fractional' size when displayed.
 class FractionallySizedWidget extends StatelessWidget {
+  /// The fractional value and child is required.
   const FractionallySizedWidget({
     Key? key,
     required this.widthFactor,
     required this.child,
   }) : super(key: key);
+
+  /// Size this factor
   final double widthFactor;
+
+  /// The child widget displayed.
   final Widget child;
 
   @override
@@ -516,7 +510,9 @@ class FractionallySizedWidget extends StatelessWidget {
       );
 }
 
+/// Supply a list of properties in one object.
 class StackWidgetProperties {
+  /// All are optional except the child widget.
   StackWidgetProperties({
     this.alignment,
     this.textDirection,
@@ -524,16 +520,27 @@ class StackWidgetProperties {
     this.clipBehavior,
     required this.child,
   });
+
+  ///
   final AlignmentGeometry? alignment;
+
+  ///
   final TextDirection? textDirection;
+
+  ///
   final StackFit? fit;
+
+  ///
   final Clip? clipBehavior;
+
+  ///
   final Widget? child;
 }
 
 /// Popup window
 /// Provides an animated popup.
 class PopupPage extends WebPageWidget {
+  /// Many options are for the Scaffold Widget.
   PopupPage({
     Key? key,
     required this.inBuilder,
@@ -580,8 +587,14 @@ class PopupPage extends WebPageWidget {
           title: title,
           hasBottomBar: hasBottomBar ?? false,
         );
+
+  /// Function builds the child widget
   final WidgetBuilder inBuilder;
+
+  ///
   final void Function()? initState;
+
+  ///
   final void Function()? dispose;
 
   @override
@@ -670,6 +683,8 @@ class PopupPage extends WebPageWidget {
 
 /// Passing a Widget builder to the Webpage Controller.
 class BuilderPageController extends WebPageController {
+  /// Supply a WidgetBuilder instead of a child widget
+  /// init and dispose function.
   BuilderPageController({
     required this.inBuilder,
     this.initStateFunc,
@@ -705,9 +720,17 @@ class BuilderPageController extends WebPageController {
           physics: physics,
           state: state,
         );
+
+  ///
   final WidgetBuilder inBuilder;
+
+  ///
   final void Function()? initStateFunc;
+
+  ///
   final void Function()? disposeFunc;
+
+  ///
   final bool? popup;
 
   @override

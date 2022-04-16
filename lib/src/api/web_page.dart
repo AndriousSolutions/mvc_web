@@ -4,7 +4,10 @@
 
 import 'package:mvc_web/src/view.dart';
 
+/// extend this class instead of a StatefulWidget
 class WebPageWidget extends WebPageBase {
+  /// Always supply a 'WebPage' Controller.
+  /// bool hasBottomBar will supply a bottom bar if already defined.
   WebPageWidget({
     Key? key,
     required this.controller,
@@ -13,13 +16,17 @@ class WebPageWidget extends WebPageBase {
   }) : super(controller, key: key ?? GlobalKey<StateMVC>(), title: title) {
     controller.widget = this;
   }
+
+  /// Webpage controller
   final WebPageController controller;
+
+  /// Display a bottom bar
   final bool? hasBottomBar;
 }
 
 /// Controller for the Webpage framework
 abstract class WebPageController extends WebPageBaseController {
-  //
+  /// Supply the Scaffold widget options.
   WebPageController({
     PreferredSizeWidget? appBar,
     Color? backgroundColor,
@@ -131,8 +138,10 @@ abstract class WebPageController extends WebPageBaseController {
 /// You can supply controller properties instead.
 /// The Controller is created for you.
 ///
-/// Uses the 'default' bottombar if any is available.
+/// Uses the 'default' bottom bar if any is available.
 class WebPageWrapper extends WebPageWidget {
+  /// Supply the 'child' widget to display or a list of child widgets.
+  /// Many are the Scaffold widget options.
   WebPageWrapper({
     Key? key,
     this.child,
@@ -188,11 +197,17 @@ class WebPageWrapper extends WebPageWidget {
           title: title,
           hasBottomBar: hasBottomBar,
         );
+
+  /// The child widget to be viewed in the webpage.
   final Widget? child;
+
+  /// The list of child widgets. Above child widget takes precedence.
   final List<Widget>? children;
 }
 
+/// A predefined 'Webpage' controller
 class WebPageControllerWrapper extends WebPageController {
+  /// Many are Scaffold widget options.
   WebPageControllerWrapper({
     List<Widget>? Function(BuildContext context)? persistentFooterButtons,
     Widget? Function(BuildContext context)? drawer,
@@ -254,16 +269,6 @@ class WebPageControllerWrapper extends WebPageController {
   List<Widget> buildList(BuildContext context) =>
       _wrapper?.children ?? [const SizedBox()];
 
-  // /// Supply the widget's function instead.
-  // @override
-  // List<Widget>? withHeader04(BuildContext context, [WebPageWidget? widget]) =>
-  //     _wrapper!.children;
-  //
-  // /// Supply the widget's function instead.
-  // @override
-  // List<Widget>? child(BuildContext context, [WebPageWidget? widget]) =>
-  //     _wrapper!._child.isNotEmpty ? _wrapper!._child : super.child(context)!;
-
   List<Widget>? Function(BuildContext context)? _persistentFooterButtons;
   Widget? Function(BuildContext context)? _drawer;
   DrawerCallback? Function(BuildContext context)? _onDrawerChanged;
@@ -322,8 +327,13 @@ Widget interactiveViewer(Widget widget, {bool wrap = true}) {
   return widget;
 }
 
+/// Display a child widget within a predefined Container widget
 class WebPageContainer extends StatelessWidget {
+  /// The child widget takes precedence but if not there
+  /// the builder() function is called.
   const WebPageContainer({Key? key, this.child}) : super(key: key);
+
+  ///
   final Widget? child;
 
   @override
