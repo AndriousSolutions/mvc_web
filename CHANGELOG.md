@@ -1,5 +1,5 @@
 
-## 1.7.0
+## 1.7.0+01
  April 16, 2022
 - // Notify dependencies of the App's InheritedWidget
 - notifyDependencies = true;
@@ -8,6 +8,7 @@
 - /// Present the Scaffold widget to its own State object.
 - class _ScaffoldBuilder extends StatefulWidget {
 - sdk: ">=2.16.2 <3.0.0"
+- BottomBarColumn now has optional column entries
 
 ## 1.6.1
  March 31, 2022

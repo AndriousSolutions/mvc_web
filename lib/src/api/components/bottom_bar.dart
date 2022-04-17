@@ -31,11 +31,11 @@ class BottomBarColumn extends StatelessWidget {
   /// Optional callback functions for the list of headings displayed in a column.
   const BottomBarColumn({
     required this.heading,
-    required this.s1,
+    this.s1,
     this.onPressedS1,
-    required this.s2,
+    this.s2,
     this.onPressedS2,
-    required this.s3,
+    this.s3,
     this.onPressedS3,
     Key? key,
   }) : super(key: key);
@@ -44,19 +44,19 @@ class BottomBarColumn extends StatelessWidget {
   final String heading;
 
   ///
-  final String s1;
+  final String? s1;
 
   ///
   final VoidCallback? onPressedS1;
 
   ///
-  final String s2;
+  final String? s2;
 
   ///
   final VoidCallback? onPressedS2;
 
   ///
-  final String s3;
+  final String? s3;
 
   ///
   final VoidCallback? onPressedS3;
@@ -76,39 +76,42 @@ class BottomBarColumn extends StatelessWidget {
               fontWeight: FontWeight.w500,
             ),
           ),
-          const SizedBox(height: 10),
-          TextButton(
-            onPressed: onPressedS1 ?? () {},
-            child: Text(
-              s1,
-              style: TextStyle(
-                color: Colors.blueGrey[100],
-                fontSize: 14,
+          if (s1 != null) const SizedBox(height: 10),
+          if (s1 != null)
+            TextButton(
+              onPressed: onPressedS1 ?? () {},
+              child: Text(
+                s1!,
+                style: TextStyle(
+                  color: Colors.blueGrey[100],
+                  fontSize: 14,
+                ),
               ),
             ),
-          ),
-          const SizedBox(height: 5),
-          TextButton(
-            onPressed: onPressedS2 ?? () {},
-            child: Text(
-              s2,
-              style: TextStyle(
-                color: Colors.blueGrey[100],
-                fontSize: 14,
+          if (s2 != null) const SizedBox(height: 5),
+          if (s2 != null)
+            TextButton(
+              onPressed: onPressedS2 ?? () {},
+              child: Text(
+                s2!,
+                style: TextStyle(
+                  color: Colors.blueGrey[100],
+                  fontSize: 14,
+                ),
               ),
             ),
-          ),
-          const SizedBox(height: 5),
-          TextButton(
-            onPressed: onPressedS3 ?? () {},
-            child: Text(
-              s3,
-              style: TextStyle(
-                color: Colors.blueGrey[100],
-                fontSize: 14,
+          if (s3 != null) const SizedBox(height: 5),
+          if (s3 != null)
+            TextButton(
+              onPressed: onPressedS3 ?? () {},
+              child: Text(
+                s3!,
+                style: TextStyle(
+                  color: Colors.blueGrey[100],
+                  fontSize: 14,
+                ),
               ),
             ),
-          ),
         ],
       ),
     );
