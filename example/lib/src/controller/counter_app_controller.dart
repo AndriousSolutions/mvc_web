@@ -10,7 +10,7 @@ import 'package:example/src/view.dart';
 
 /// The Controller determines the content provided.
 class CounterAppController extends WebPageController {
-  factory CounterAppController([StateMVC? state]) {
+  factory CounterAppController([StateX? state]) {
     _this ??= CounterAppController._();
     _this?.addState(state);
     return _this!;

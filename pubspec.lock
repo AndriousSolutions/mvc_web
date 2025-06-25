@@ -16,7 +16,7 @@ packages:
     source: hosted
     version: "2.9.0"
   auto_size_text:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: auto_size_text
       url: "https://pub.dartlang.org"
@@ -92,13 +92,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "5.0.1"
-  cupertino_icons:
-    dependency: "direct main"
-    description:
-      name: cupertino_icons
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.5"
   dbus:
     dependency: transitive
     description:
@@ -142,7 +135,7 @@ packages:
     source: hosted
     version: "6.1.4"
   file_picker:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: file_picker
       url: "https://pub.dartlang.org"
@@ -159,7 +152,7 @@ packages:
       name: flutter_lints
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.4"
+    version: "2.0.1"
   flutter_localizations:
     dependency: transitive
     description: flutter
@@ -197,12 +190,12 @@ packages:
     source: sdk
     version: "0.0.0"
   fluttery_framework:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: fluttery_framework
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.6.1"
+    version: "1.6.2+01"
   html:
     dependency: transitive
     description:
@@ -251,7 +244,7 @@ packages:
       name: lints
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.1"
+    version: "2.0.1"
   matcher:
     dependency: transitive
     description:
@@ -273,13 +266,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.8.0"
-  mvc_web:
-    dependency: "direct main"
-    description:
-      path: ".."
-      relative: true
-    source: path
-    version: "1.7.0+01"
   nm:
     dependency: transitive
     description:
@@ -293,7 +279,7 @@ packages:
       name: package_info_plus
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.1"
+    version: "3.0.2"
   package_info_plus_platform_interface:
     dependency: transitive
     description:
@@ -481,13 +467,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.0"
-  state_set:
-    dependency: transitive
-    description:
-      name: state_set
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "3.6.0+06"
   stream_channel:
     dependency: transitive
     description:
@@ -536,9 +515,9 @@ packages:
       name: unique_identifier
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.2"
+    version: "0.2.0"
   universal_html:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: universal_html
       url: "https://pub.dartlang.org"
@@ -559,7 +538,7 @@ packages:
     source: hosted
     version: "1.0.0+1"
   url_launcher:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: url_launcher
       url: "https://pub.dartlang.org"
@@ -627,7 +606,7 @@ packages:
       name: uuid
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.6"
+    version: "3.0.7"
   vector_math:
     dependency: transitive
     description:

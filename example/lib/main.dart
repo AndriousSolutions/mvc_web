@@ -6,6 +6,8 @@ import 'package:mvc_web/mvc_web.dart';
 
 import 'package:example/src/controller.dart';
 
+import 'package:example/src/model.dart' show deDE, esAR, frFR, heIL, ruRU, zhCN;
+
 void main() => runApp(MyApp());
 
 class MyApp extends AppStatefulWidget {
@@ -13,6 +15,17 @@ class MyApp extends AppStatefulWidget {
 
   @override
   AppState createAppState() => AppState(
+        inInitState: () {
+          /// The app's translations
+          L10n.translations = {
+            const Locale('zh', 'CN'): zhCN,
+            const Locale('fr', 'FR'): frFR,
+            const Locale('de', 'DE'): deDE,
+            const Locale('he', 'IL'): heIL,
+            const Locale('ru', 'RU'): ruRU,
+            const Locale('es', 'AR'): esAR,
+          };
+        },
         theme: ThemeData(
           // This is the theme of your application.
           primarySwatch: Colors.blue,
@@ -22,12 +35,12 @@ class MyApp extends AppStatefulWidget {
           '/': (_) => MyHomePage(),
         }),
         // This is the app's localization
-        supportedLocales: AppTrs.supportedLocales,
+        supportedLocales: L10n.supportedLocales,
         localizationsDelegates: [
-          L10n.delegate!,
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
           GlobalMaterialLocalizations.delegate,
+          L10n.delegate,
         ],
         // These are flags used during development
 //    debugPaintSizeEnabled: true,

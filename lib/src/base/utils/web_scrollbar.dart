@@ -75,10 +75,23 @@ class _WebScrollbarState extends State<WebScrollbar> {
 
     double? topMargin;
 
-    if (widget.controller.hasClients) {
-      final position =
-          _scrollPosition / widget.controller.position.maxScrollExtent;
-      topMargin = (screenSize.height * position) - (_scrollerHeight * position);
+    final ScrollController controller = widget.controller;
+
+    if (controller.hasClients) {
+      final positions = controller.positions;
+      if (positions.length > 1) {
+        final scrollPosition = positions.first;
+        controller.detach(scrollPosition);
+        // It's important that we not dispose the old position until after the
+        // viewport has had a chance to unregister its listeners from the old
+        // position. So, schedule a microtask to do it.
+        scheduleMicrotask(scrollPosition.dispose);
+      }
+      if (controller.position.hasContentDimensions) {
+        final position = _scrollPosition / controller.position.maxScrollExtent;
+        topMargin =
+            (screenSize.height * position) - (_scrollerHeight * position);
+      }
     }
 
     if (topMargin == null || topMargin == double.nan || topMargin < 0) {

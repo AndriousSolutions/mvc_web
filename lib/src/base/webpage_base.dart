@@ -241,6 +241,8 @@ abstract class WebPageBaseController extends ScaffoldScreenController {
     ///
     stackProps = screenOverlay(context);
 
+    final _scrollController = BaseScrollController(this);
+
     /// Display the overlay if it exists
     if (_child == null) {
       _child = stackProps?.child;
@@ -271,7 +273,7 @@ abstract class WebPageBaseController extends ScaffoldScreenController {
         padding: padding,
         primary: false,
         physics: physics ?? const ClampingScrollPhysics(),
-        controller: scrollController,
+        controller: _scrollController,
         dragStartBehavior: dragStartBehavior ?? DragStartBehavior.start,
         clipBehavior: clipBehavior ?? Clip.hardEdge,
         keyboardDismissBehavior:
@@ -298,7 +300,7 @@ abstract class WebPageBaseController extends ScaffoldScreenController {
       backgroundColor: Colors.blueGrey.withOpacity(0.3),
       width: 16,
       heightFraction: 0.3,
-      controller: scrollController,
+      controller: _scrollController,
       child: _child ?? const SizedBox(),
     );
   }

@@ -161,7 +161,7 @@ class _ScaffoldBuilderState extends State<_ScaffoldBuilder> {
   @override
   Widget build(BuildContext context) {
     // Link this to an InheritedWidget.
-    con.widgetInherited(context);
+    con.dependOnInheritedWidget(context);
     return con.buildScaffold(context)!;
   }
 }

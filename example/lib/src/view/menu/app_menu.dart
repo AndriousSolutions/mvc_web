@@ -4,7 +4,7 @@
 
 import 'package:example/src/controller.dart';
 
-import 'package:mvc_application/view.dart';
+import 'package:fluttery_framework/view.dart';
 
 /// Supply the app's popupmenu
 Widget popupMenu({
@@ -44,7 +44,7 @@ Widget popupMenu({
       captureInheritedThemes: captureInheritedThemes,
     ).popupMenuButton;
 
-class PopMenu extends AppPopupMenu<String> {
+class PopMenu extends AppMenu<String> {
   //
   PopMenu({
     Key? key,
@@ -80,9 +80,9 @@ class PopMenu extends AppPopupMenu<String> {
           shape: shape ??
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           color: color,
-          // false so to prevent the error,
-          // "Looking up a deactivated widget's ancestor is unsafe."
-          captureInheritedThemes: captureInheritedThemes ?? false,
+          // // false so to prevent the error,
+          // // "Looking up a deactivated widget's ancestor is unsafe."
+          // captureInheritedThemes: captureInheritedThemes ?? false,
         );
 
   @override
@@ -99,12 +99,11 @@ class PopMenu extends AppPopupMenu<String> {
         ),
       ];
 
-  @override
   Future<void> onSelection(String value) async {
     final appContext = App.context!;
     switch (value) {
       case 'locale':
-        final locales = AppTrs.supportedLocales;
+        final locales = L10n.supportedLocales;
 
         final initialItem = locales.indexOf(App.locale!);
 
@@ -113,7 +112,7 @@ class PopMenu extends AppPopupMenu<String> {
             supportedLocales: locales,
             onSelectedItemChanged: (int index) async {
               // Retrieve the available locales.
-              final locale = AppTrs.getLocale(index);
+              final locale = L10n.getLocale(index);
               if (locale != null) {
                 // You must 'rebuild' the whole App all over again.
                 App.locale = locale;
@@ -134,7 +133,7 @@ class PopMenu extends AppPopupMenu<String> {
       case 'about':
         showAboutDialog(
           context: appContext,
-          applicationName: App.vw?.title ?? '',
+          applicationName: App.title ?? '',
           applicationVersion:
               'version: ${App.version} build: ${App.buildNumber}',
         );

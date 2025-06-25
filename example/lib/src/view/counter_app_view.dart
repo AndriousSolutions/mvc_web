@@ -13,7 +13,7 @@ class CounterApp extends StatefulWidget {
   State createState() => _CounterAppState();
 }
 
-class _CounterAppState extends StateMVC<CounterApp> {
+class _CounterAppState extends StateX<CounterApp> {
   @override
   void initState() {
     con = CounterAppController(this);

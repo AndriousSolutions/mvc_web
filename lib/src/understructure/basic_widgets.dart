@@ -2,9 +2,14 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'dart:async';
+
 import 'package:mvc_web/src/controller.dart';
 
 import 'package:mvc_web/src/view.dart';
+
+/// State Set
+// import 'package:state_set/state_set.dart';
 
 /// The base
 abstract class BasicScrollStatefulWidget extends StatefulWidget {
@@ -32,14 +37,14 @@ abstract class BasicScrollStatefulWidget extends StatefulWidget {
 }
 
 /// The base class for the Webpage controller.
-abstract class BasicScrollController extends ControllerMVC {
+abstract class BasicScrollController extends StateXController {
   /// Assign a State object to this class.
   BasicScrollController([State? state])
       : _state = state,
-        super(state is StateMVC ? state : null) {
-    // Add the same State object to all 'Web Page Controllers'
-    final state = StateSet.to<_BasicScrollState>();
-    addState(state);
+        super(state is StateX ? state : null) {
+    // // Add the same State object to all 'Web Page Controllers'
+    // final state = StateSet.to<_BasicScrollState>();
+    // addState(state);
   }
   State? _state;
 
@@ -47,18 +52,18 @@ abstract class BasicScrollController extends ControllerMVC {
   @mustCallSuper
   void initState() {
     super.initState();
-    _scrollController = _BasicScrollController();
-    _scrollController.addListener(() {
-      // Record the offset with every scroll.
-      _lastOffset = _offset;
-      _offset = _scrollController.offset;
-    });
+    // _scrollController = _BasicScrollController();
+    // _scrollController.addListener(() {
+    //   // Record the offset with every scroll.
+    //   _lastOffset = _offset;
+    //   _offset = _scrollController.offset;
+    // });
   }
 
   @override
   void dispose() {
     _state = null;
-    _scrollController.dispose();
+    scrollController?.dispose();
     super.dispose();
   }
 
@@ -66,6 +71,7 @@ abstract class BasicScrollController extends ControllerMVC {
   void setState(VoidCallback fn) {
     if (_state != null) {
       if (_state!.mounted) {
+        //ignore: invalid_use_of_protected_member
         _state!.setState(fn);
       }
     } else {
@@ -75,20 +81,22 @@ abstract class BasicScrollController extends ControllerMVC {
     notifyDependencies = true;
   }
 
-  @override
+  ///
   void refresh() {
-    final _inState = state as InheritedStateMVC;
-    _inState.inheritedStatefulWidget.inheritedChildWidget =
-        _inState.buildChild(_inState.context);
-    super.refresh();
+    final _inState = state as InheritedStateX;
+    // _inState.inheritedStatefulWidget.inheritedChildWidget =
+    //     _inState.buildChild(_inState.context);
+    _inState.buildWidget(_inState.context);
+    super.setState(() {});
   }
 
   /// Notify the dependencies for the InheritedWidget
   bool notifyDependencies = false;
 
-  late ScrollController _scrollController;
-
+  ///
   double _offset = 0;
+
+  ///
   double _lastOffset = 0;
 
   /// Scrolling up
@@ -98,15 +106,15 @@ abstract class BasicScrollController extends ControllerMVC {
   bool get scrollDown => !scrollUp;
 
   /// The Scroll Controller
-  ScrollController get scrollController => _scrollController;
+  ScrollController? scrollController;
 
   /// The first ScrollController that takes in a Scrollable
   ScrollController? get rootScrollController =>
-      (_scrollController as _BasicScrollController)._rootScrollController;
+      (scrollController as BaseScrollController)._rootScrollController;
 
   /// Return the offset 'scroll position'
   double get scrollPosition =>
-      !_scrollController.hasClients ? 0 : _scrollController.offset;
+      !scrollController!.hasClients ? 0 : scrollController!.offset;
 
   ///
   double opacity = 0;
@@ -146,8 +154,8 @@ abstract class BasicScrollController extends ControllerMVC {
 
 ///
 class _BasicScrollState
-    extends InheritedStateMVC<BasicScrollStatefulWidget, _BasicInheritedWidget>
-    with StateSet {
+    extends InheritedStateX<BasicScrollStatefulWidget, _BasicInheritedWidget> {
+//    with StateSet {
   //
   _BasicScrollState(BasicScrollController _controller)
       : super(
@@ -214,10 +222,10 @@ class _BasicScrollState
 /// The State object's InheritedWidget
 class _BasicInheritedWidget extends InheritedWidget {
   const _BasicInheritedWidget({
-    Key? key,
+    super.key,
     required this.controller,
-    required Widget child,
-  }) : super(key: key, child: child);
+    required super.child,
+  });
   //
   final BasicScrollController controller;
 
@@ -248,21 +256,21 @@ class _BasicInheritedWidget extends InheritedWidget {
 }
 
 /// Scroll Controller
-class _BasicScrollController extends ScrollController {
-  /// Creates a controller for a scrollable widget.
+class BaseScrollController extends ScrollController {
   ///
-  _BasicScrollController({
-    double initialScrollOffset = 0.0,
-    bool keepScrollOffset = true,
-    String? debugLabel,
-  }) : super(
-          initialScrollOffset: initialScrollOffset,
-          keepScrollOffset: keepScrollOffset,
-          debugLabel: debugLabel,
-        );
+  BaseScrollController(this.con) {
+    addListener(() {
+      // Record the offset with every scroll.
+      con._lastOffset = con._offset;
+      con._offset = offset;
+    });
+  }
+
+  ///
+  final BasicScrollController con;
 
   /// The 'first' Scroll Controller
-  _BasicScrollController? _rootScrollController;
+  BaseScrollController? _rootScrollController;
 
   @override
   ScrollPosition createScrollPosition(
@@ -272,7 +280,6 @@ class _BasicScrollController extends ScrollController {
   ) {
     // Record the 'root' Scroll Controller
     _rootScrollController ??= this;
-
     return super.createScrollPosition(
       physics,
       context,

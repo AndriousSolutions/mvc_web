@@ -3,5 +3,3 @@
 // found in the LICENSE file.
 
 export 'package:example/src/controller/counter_app_controller.dart';
-
-export 'package:example/src/controller/translations_controller.dart';

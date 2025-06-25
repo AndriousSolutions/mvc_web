@@ -13,7 +13,7 @@ class WebPageWidget extends WebPageBase {
     required this.controller,
     String? title,
     this.hasBottomBar,
-  }) : super(controller, key: key ?? GlobalKey<StateMVC>(), title: title) {
+  }) : super(controller, key: key ?? GlobalKey<StateX>(), title: title) {
     controller.widget = this;
   }
 

@@ -1,4 +1,13 @@
 
+## 1.9.0
+June 24, 2025
+- Backup source code
+
+## 1.8.0
+ November 19, 2022
+- Introduced fluttery_framework package
+- import 'package:state_set/state_set.dart'; only where needed.
+
 ## 1.7.0+01
  April 16, 2022
 - // Notify dependencies of the App's InheritedWidget

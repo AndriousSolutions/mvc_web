@@ -3,16 +3,13 @@
 // found in the LICENSE file.
 
 /// MVC framework
-export 'package:mvc_application/view.dart' hide AppMenu; //, runApp;
+export 'package:fluttery_framework/view.dart' hide AppMenu; //, runApp;
 
 /// How a gesture starts
 export 'package:flutter/gestures.dart' show DragStartBehavior;
 
 /// Text
 export 'package:auto_size_text/auto_size_text.dart';
-
-/// State Set
-export 'package:state_set/state_set.dart';
 
 /// api
 export 'package:mvc_web/src/api/web_page.dart';

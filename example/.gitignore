@@ -85,7 +85,7 @@ lcov.info
 .vscode/
 
 # Flutter/Dart/Pub related
-/build/**
+/build/
 
 # Web related
 /lib/generated_plugin_registrant.dart
@@ -99,21 +99,21 @@ mapping.txt
 seeds.txt
 unused.txt
 
-/obfuscate/**
-/obfuscation/**
+/obfuscate/
+/obfuscation/
 
 # No need for testing
-/test/**
+/test/
 
 ## Don't need the Android stuff
-/android/**
+/android/
 
 # Android related
 google-services.json
 
 
 ## Don't need the iOS stuff
-/ios/**
+/ios/
 
 # iOS/XCode related
 #GoogleService-Info.plist
@@ -130,17 +130,17 @@ GeneratedPluginRegistrant.*
 Info.plist
 
 # Linux related
-/linux/**
+/linux/
 
 # macro related
-/macros/**
-/macos/**
+/macros/
+/macos/
 
 ## Don't need the Web stuff
-/web/**
+/web/
 
 ## Don't need the Windows stuff
-/windows/**
+/windows/
 
 # flutter_local_notifications
 -keep class com.dexterous.** { *; }
